@@ -1,5 +1,7 @@
 package com.seb;
 
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.MediaKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +40,6 @@ public class ConnectButton extends JButton implements ActionListener {
             if (Main.in.readLine().equals("no")) return;
             String play = "", skip = "";
             JSONObject file = new JSONObject();
-            File ff = new File("hotkeys");
             try {
                 file = new JSONObject(Files.readString(Path.of("hotkeys")));
                 play = file.getString("play");
@@ -47,9 +48,13 @@ public class ConnectButton extends JButton implements ActionListener {
                 if (!(e instanceof NoSuchFileException))
                     System.err.println(e);
             }
-            Main.provider.register(KeyStroke.getKeyStroke(play), main);
+            if (!play.equals("MEDIA_PLAY_PAUSE"))
+                Main.provider.register(KeyStroke.getKeyStroke(play), main);
+            else Main.provider.register(MediaKey.MEDIA_PLAY_PAUSE, main);
             Main.buttons.put("play", play);
-            Main.provider.register(KeyStroke.getKeyStroke(skip), main);
+            if (!skip.equals("MEDIA_NEXT_TRACK"))
+                Main.provider.register(KeyStroke.getKeyStroke(skip), main);
+            else Main.provider.register(MediaKey.MEDIA_NEXT_TRACK, main);
             Main.buttons.put("skip", skip);
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
@@ -59,7 +64,7 @@ public class ConnectButton extends JButton implements ActionListener {
             bottompanel.setLayout(new BorderLayout());
             JTextField playhotkey = new JTextField(play);
             playhotkey.setEditable(false);
-            toppanel.add(playhotkey, BorderLayout.CENTER);
+            toppanel.add(playhotkey, BorderLayout.WEST);
             JButton changePlayHotkey = new JButton("Change Play Hotkey");
             JSONObject finalFile = file;
             changePlayHotkey.addActionListener(e -> {
@@ -87,11 +92,28 @@ public class ConnectButton extends JButton implements ActionListener {
                     }
                 });
             });
-            toppanel.add(changePlayHotkey, BorderLayout.EAST);
-
+            toppanel.add(changePlayHotkey, BorderLayout.CENTER);
+            JButton usePlayPause = new JButton("Use Media Key");
+            usePlayPause.addActionListener(e -> {
+                playhotkey.setText("MEDIA_PLAY_PAUSE");
+                finalFile.put("play", playhotkey.getText());
+                try {
+                    PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
+                    hotkeyWriter.println(finalFile);
+                    hotkeyWriter.close();
+                    if (Main.buttons.get("skip").equals("MEDIA_PLAY_PAUSE"))
+                        Main.provider.unregister(MediaKey.MEDIA_PLAY_PAUSE);
+                    else Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("skip")));
+                    Main.buttons.put("play", "MEDIA_PLAY_PAUSE");
+                    Main.provider.register(MediaKey.MEDIA_PLAY_PAUSE, main);
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            toppanel.add(usePlayPause, BorderLayout.EAST);
             JTextField skipHotkey = new JTextField(skip);
             skipHotkey.setEditable(false);
-            bottompanel.add(skipHotkey, BorderLayout.CENTER);
+            bottompanel.add(skipHotkey, BorderLayout.WEST);
             JButton changeSkipHotkey = new JButton("Change Skip Hotkey");
             changeSkipHotkey.addActionListener(e -> {
                 changeSkipHotkey.setEnabled(false);
@@ -118,13 +140,33 @@ public class ConnectButton extends JButton implements ActionListener {
                     }
                 });
             });
-            bottompanel.add(changeSkipHotkey, BorderLayout.EAST);
+            bottompanel.add(changeSkipHotkey, BorderLayout.CENTER);
+
+            JButton useSkipKey = new JButton("Use Media Key");
+            useSkipKey.addActionListener(e -> {
+                skipHotkey.setText("MEDIA_NEXT_TRACK");
+                finalFile.put("skip", skipHotkey.getText());
+                try {
+                    PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
+                    hotkeyWriter.println(finalFile);
+                    hotkeyWriter.close();
+                    if (Main.buttons.get("skip").equals("MEDIA_NEXT_TRACK"))
+                        Main.provider.unregister(MediaKey.MEDIA_NEXT_TRACK);
+                    else Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("skip")));
+                    Main.buttons.put("skip", "MEDIA_NEXT_TRACK");
+                    Main.provider.register(MediaKey.MEDIA_NEXT_TRACK, main);
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            bottompanel.add(useSkipKey, BorderLayout.EAST);
             panel.add(toppanel, BorderLayout.NORTH);
             panel.add(bottompanel, BorderLayout.CENTER);
             Main.frame.dispose();
             JFrame frame = new JFrame();
             frame.add(panel);
             frame.pack();
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setVisible(true);
             System.out.println("done");
         } catch (IOException ex) {

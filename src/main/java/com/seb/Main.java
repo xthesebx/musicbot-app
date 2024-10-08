@@ -53,11 +53,18 @@ public class Main implements HotKeyListener {
 
     @Override
     public void onHotKey(HotKey hotKey) {
-
-        if (buttons.get("play").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
-            out.println("playpause");
-        } else if (buttons.get("skip").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
-            out.println("nexttrack");
+        if (hotKey.keyStroke != null) {
+            if (buttons.get("play").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
+                out.println("playpause");
+            } else if (buttons.get("skip").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
+                out.println("nexttrack");
+            }
+        } else if (hotKey.mediaKey != null) {
+            if (buttons.get("play").equals(hotKey.mediaKey.toString())) {
+                out.println("playpause");
+            } else if (buttons.get("skip").equals(hotKey.mediaKey.toString())) {
+                out.println("nexttrack");
+            }
         }
     }
 }
