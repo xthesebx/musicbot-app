@@ -7,7 +7,6 @@ import com.tulskiy.keymaster.common.Provider;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
@@ -24,11 +23,11 @@ public class Main implements HotKeyListener {
     public static Provider provider;
     public static HashMap<String, String> buttons = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Main();
     }
 
-    public Main() throws IOException {
+    public Main() {
         frame = new JFrame();
         frame.setTitle("HotKeys");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,9 +44,6 @@ public class Main implements HotKeyListener {
         frame.setVisible(true);
 
         provider = Provider.getCurrentProvider(false);
-        /*provider.register(KeyStroke.getKeyStroke("ctrl MULTIPLY"), this);
-        provider.register(KeyStroke.getKeyStroke("ctrl SUBTRACT"), this);
-        provider.register(KeyStroke.getKeyStroke("ctrl ADD"), this);*/
 
     }
 
