@@ -9,6 +9,9 @@ import java.net.Socket;
 
 public class ConnectButton extends JButton implements ActionListener {
 
+    public static Socket socket;
+    public static PrintWriter out;
+    public static BufferedReader in;
     private final Main main;
     public static JFrame frame;
 
@@ -21,16 +24,16 @@ public class ConnectButton extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         try {
-            Main.socket = new Socket("212.132.98.148", 4269);
-            Main.out = new PrintWriter(Main.socket.getOutputStream(), true);
-            Main.in = new BufferedReader(new InputStreamReader(Main.socket.getInputStream()));
-            Main.out.println(Main.tf.getText().strip());
-            String s = Main.in.readLine();
-            System.out.println(s);
+            String ip = "212.132.98.148";
+            if (Main.DEBUG) ip = "127.0.0.1";
+            socket = new Socket(ip, 4269);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out.println(Main.tf.getText().strip());
+            Main.tf.setText("");
+            String s = in.readLine();
             if (s.equals("no")) return;
-            System.out.println("connected");
             new Thread(new QueueListener()).start();
-            System.out.println("thread running");
             frame = new RealFrame(main);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

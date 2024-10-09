@@ -13,6 +13,7 @@ public class QueueFrame extends JFrame {
 
     JTable table;
     String header[] = new String[] {"title", "interpret", "length"};
+    public DefaultTableModel dtm;
 
     public QueueFrame() {
         super("Queue Frame");
@@ -25,9 +26,8 @@ public class QueueFrame extends JFrame {
         column.setWidth(50);
         table.addColumn(column);
         panel.add(new JScrollPane(table));
-        updateTable(new JSONArray());
         this.add(panel);
-        this.setSize(500, 300);
+        //this.setSize(500, 300);
         table.setDefaultEditor(Object.class, null);
         table.addKeyListener(new KeyAdapter() {
             @Override
@@ -35,26 +35,50 @@ public class QueueFrame extends JFrame {
                 super.keyPressed(e);
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                     JSONArray delete = new JSONArray();
-                    for (int i : table.getSelectedRows())
+                    for (int i : table.getSelectedRows()) {
                         delete.put(i);
+                        dtm.removeRow(i);
+                    }
                     JSONObject obj = new JSONObject();
                     obj.put("delete", delete);
-                    Main.out.println(obj);
+                    ConnectButton.out.println(obj);
                 }
             }
         });
-    }
-
-    public void updateTable(JSONArray data) {
-        DefaultTableModel dtm = new DefaultTableModel(0, 0);
+        dtm = new DefaultTableModel(0, 0);
         dtm.setColumnIdentifiers(header);
         table.setModel(dtm);
-        for (Object o : data) {
-            dtm.addRow(new Object[] {
-                    ((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration")
-            });
+        this.pack();
+    }
 
+    public void updateTable(JSONObject data) {
+        if (data.has("clear")) {
+            dtm.getDataVector().removeAllElements();
         }
+        if (data.has("insert")) {
+            JSONObject obj = data.getJSONObject("insert");
+            for (String s : obj.keySet()) {
+                JSONObject insObj = obj.getJSONObject(s);
+                dtm.insertRow(Integer.parseInt(s), new Object[] {
+                        insObj.getString("title"), insObj.getString("author"), insObj.getString("duration")});
+                insObj.clear();
+            }
 
+            obj.clear();
+        }
+        if (data.has("queue")) {
+            JSONArray queue = data.optJSONArray("queue");
+            for (Object o : queue) {
+                dtm.addRow(new Object[]{
+                        ((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration")
+                });
+            }
+            queue.clear();
+        }
+        if (data.has("next")) {
+            dtm.removeRow(0);
+        }
+        data.clear();
+        this.pack();
     }
 }

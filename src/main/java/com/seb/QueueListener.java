@@ -14,14 +14,14 @@ public class QueueListener implements Runnable {
     public void run()  {
         String s;
         try {
-            while ((s = Main.in.readLine()) != null) {
-                RealFrame.queue.updateTable(new JSONObject(s).getJSONArray("queue"));
+            while ((s = ConnectButton.in.readLine()) != null) {
+                RealFrame.queue.updateTable(new JSONObject(s));
             }
         } catch (IOException e) {
             if (e instanceof SocketException) {
                 ConnectButton.frame.dispose();
                 RealFrame.queue.dispose();
-                new Main();
+                Main.frame.setVisible(true);
             }
             else
                 e.printStackTrace();

@@ -1,6 +1,9 @@
 package com.seb;
 
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.HotKeyListener;
 import com.tulskiy.keymaster.common.MediaKey;
+import com.tulskiy.keymaster.common.Provider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,15 +18,21 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-public class RealFrame extends JFrame {
+public class RealFrame extends JFrame implements HotKeyListener {
 
-    public static QueueFrame queue = new QueueFrame();
-    public static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
+    private final Provider provider;
+    private final HashMap<String, String> buttons = new HashMap<>();
+    public static QueueFrame queue;
+    private static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
+    private final RealFrame me = this;
 
     public RealFrame(Main main) {
         super("Controller");
+        provider = Provider.getCurrentProvider(false);
+        queue = new QueueFrame();
         String play = "", skip = "";
         JSONObject file = new JSONObject();
         try {
@@ -35,13 +44,14 @@ public class RealFrame extends JFrame {
                 System.err.println(e);
         }
         if (!play.equals("MEDIA_PLAY_PAUSE"))
-            Main.provider.register(KeyStroke.getKeyStroke(play), main);
-        else Main.provider.register(MediaKey.MEDIA_PLAY_PAUSE, main);
-        Main.buttons.put("play", play);
+            provider.register(KeyStroke.getKeyStroke(play), this);
+        else provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
+        buttons.put("play", play);
         if (!skip.equals("MEDIA_NEXT_TRACK"))
-            Main.provider.register(KeyStroke.getKeyStroke(skip), main);
-        else Main.provider.register(MediaKey.MEDIA_NEXT_TRACK, main);
-        Main.buttons.put("skip", skip);
+            provider.register(KeyStroke.getKeyStroke(skip), this);
+        else provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
+
+        buttons.put("skip", skip);
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         JPanel toppanel = new JPanel();
@@ -66,9 +76,9 @@ public class RealFrame extends JFrame {
                             PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                             hotkeyWriter.println(finalFile);
                             hotkeyWriter.close();
-                            Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("play")));
-                            Main.buttons.put("play", keyStroke.toString().replaceAll("pressed ", ""));
-                            Main.provider.register(keyStroke, main);
+                            provider.unregister(KeyStroke.getKeyStroke(buttons.get("play")));
+                            buttons.put("play", keyStroke.toString().replaceAll("pressed ", ""));
+                            provider.register(keyStroke, me);
                         } catch (FileNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -87,11 +97,11 @@ public class RealFrame extends JFrame {
                 PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                 hotkeyWriter.println(finalFile);
                 hotkeyWriter.close();
-                if (Main.buttons.get("skip").equals("MEDIA_PLAY_PAUSE"))
-                    Main.provider.unregister(MediaKey.MEDIA_PLAY_PAUSE);
-                else Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("skip")));
-                Main.buttons.put("play", "MEDIA_PLAY_PAUSE");
-                Main.provider.register(MediaKey.MEDIA_PLAY_PAUSE, main);
+                if (buttons.get("skip").equals("MEDIA_PLAY_PAUSE"))
+                    provider.unregister(MediaKey.MEDIA_PLAY_PAUSE);
+                else provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
+                buttons.put("play", "MEDIA_PLAY_PAUSE");
+                provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -114,9 +124,9 @@ public class RealFrame extends JFrame {
                             PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                             hotkeyWriter.println(finalFile);
                             hotkeyWriter.close();
-                            Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("skip")));
-                            Main.buttons.put("skip", keyStroke.toString().replaceAll("pressed ", ""));
-                            Main.provider.register(keyStroke, main);
+                            provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
+                            buttons.put("skip", keyStroke.toString().replaceAll("pressed ", ""));
+                            provider.register(keyStroke, me);
                         } catch (FileNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -136,11 +146,11 @@ public class RealFrame extends JFrame {
                 PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                 hotkeyWriter.println(finalFile);
                 hotkeyWriter.close();
-                if (Main.buttons.get("skip").equals("MEDIA_NEXT_TRACK"))
-                    Main.provider.unregister(MediaKey.MEDIA_NEXT_TRACK);
-                else Main.provider.unregister(KeyStroke.getKeyStroke(Main.buttons.get("skip")));
-                Main.buttons.put("skip", "MEDIA_NEXT_TRACK");
-                Main.provider.register(MediaKey.MEDIA_NEXT_TRACK, main);
+                if (buttons.get("skip").equals("MEDIA_NEXT_TRACK"))
+                    provider.unregister(MediaKey.MEDIA_NEXT_TRACK);
+                else provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
+                buttons.put("skip", "MEDIA_NEXT_TRACK");
+                provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -150,21 +160,22 @@ public class RealFrame extends JFrame {
         JPanel bottompanel = new JPanel(new BorderLayout());
         JButton join = new JButton("Join");
         join.addActionListener(e -> {
-            Main.out.println("join");
+            ConnectButton.out.println("join");
         });
         JButton leave = new JButton("Leave");
         leave.addActionListener(e -> {
-            Main.out.println("leave");
+            ConnectButton.out.println("leave");
         });
         JTextField url = new JTextField();
         JButton playSong = new JButton("play");
         playSong.addActionListener(e -> {
-            Main.out.println("play " + url.getText());
+            ConnectButton.out.println("play " + url.getText().strip());
+            url.setText("");
         });
         JPanel bottompanel2 = new JPanel(new BorderLayout());
         JButton shuffle = new JButton("Shuffle");
         shuffle.addActionListener(e -> {
-            Main.out.println("shuffle");
+            ConnectButton.out.println("shuffle");
         });
         JButton queue1 = new JButton("Queue");
         queue1.addActionListener(e -> {
@@ -182,10 +193,27 @@ public class RealFrame extends JFrame {
         panel.add(toppanel, BorderLayout.NORTH);
         panel.add(midpanel, BorderLayout.CENTER);
         panel.add(bottompanel, BorderLayout.SOUTH);
-        Main.frame.dispose();
+        Main.frame.setVisible(false);
         this.add(panel);
         this.pack();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
+    }
+
+    @Override
+    public void onHotKey(HotKey hotKey) {
+        if (hotKey.keyStroke != null) {
+            if (buttons.get("play").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
+                ConnectButton.out.println("playpause");
+            } else if (buttons.get("skip").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
+                ConnectButton.out.println("nexttrack");
+            }
+        } else if (hotKey.mediaKey != null) {
+            if (buttons.get("play").equals(hotKey.mediaKey.toString())) {
+                ConnectButton.out.println("playpause");
+            } else if (buttons.get("skip").equals(hotKey.mediaKey.toString())) {
+                ConnectButton.out.println("nexttrack");
+            }
+        }
     }
 }
