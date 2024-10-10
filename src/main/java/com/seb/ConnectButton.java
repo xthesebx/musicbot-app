@@ -13,7 +13,7 @@ public class ConnectButton extends JButton implements ActionListener {
     public static PrintWriter out;
     public static BufferedReader in;
     private final Main main;
-    public static JFrame frame;
+    public static RealFrame frame;
 
     public ConnectButton(Main main) {
         super("Connect");

@@ -29,6 +29,10 @@ public class RealFrame extends JFrame implements HotKeyListener {
     private static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
     private final RealFrame me = this;
 
+    public Provider getProvider() {
+        return provider;
+    }
+
     public RealFrame(Main main) {
         super("Controller");
         provider = Provider.getCurrentProvider(false);

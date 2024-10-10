@@ -22,6 +22,7 @@ public class QueueListener implements Runnable {
                 ConnectButton.frame.dispose();
                 RealFrame.queue.dispose();
                 Main.frame.setVisible(true);
+                ConnectButton.frame.getProvider().reset();
             }
             else
                 e.printStackTrace();
