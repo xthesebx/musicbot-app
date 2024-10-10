@@ -69,7 +69,7 @@ public class QueueFrame extends JFrame {
         if (data.has("queue")) {
             JSONArray queue = data.optJSONArray("queue");
             for (Object o : queue) {
-                dtm.addRow(new Object[]{
+                dtm.addRow(new String[]{
                         ((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration")
                 });
             }
