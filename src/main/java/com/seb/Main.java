@@ -31,7 +31,5 @@ public class Main {
         panel.add(button, BorderLayout.EAST);
         frame.setSize(500, 200);
         frame.setVisible(true);
-
-
     }
 }
