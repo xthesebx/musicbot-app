@@ -4,16 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class QueueFrame extends JFrame {
 
     JTable table;
     String header[] = new String[] {"title", "interpret", "length"};
-    public DefaultTableModel dtm;
+    public CustomTableModel dtm;
 
     public QueueFrame() {
         super("Queue Frame");
@@ -29,11 +27,13 @@ public class QueueFrame extends JFrame {
         this.add(panel);
         //this.setSize(500, 300);
         table.setDefaultEditor(Object.class, null);
+        table.setDropMode(DropMode.INSERT_ROWS);
+        table.setDragEnabled(true);
         table.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     JSONArray delete = new JSONArray();
                     for (int i : table.getSelectedRows()) {
                         delete.put(i);
@@ -45,9 +45,10 @@ public class QueueFrame extends JFrame {
                 }
             }
         });
-        dtm = new DefaultTableModel(0, 0);
+        dtm = new CustomTableModel(0, 0);
         dtm.setColumnIdentifiers(header);
         table.setModel(dtm);
+        table.setTransferHandler(new TableRowTransferHandler(table));
         this.pack();
     }
 
@@ -59,7 +60,7 @@ public class QueueFrame extends JFrame {
             JSONObject obj = data.getJSONObject("insert");
             for (String s : obj.keySet()) {
                 JSONObject insObj = obj.getJSONObject(s);
-                dtm.insertRow(Integer.parseInt(s), new Object[] {
+                dtm.insertRow(Integer.parseInt(s), new String[] {
                         insObj.getString("title"), insObj.getString("author"), insObj.getString("duration")});
                 insObj.clear();
             }
