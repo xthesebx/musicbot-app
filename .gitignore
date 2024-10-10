@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 /hotkeys
+/out/artifacts/twitch_request_hotkey_addon_jar/hotkeys

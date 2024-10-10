@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="twitch-request-hotkey-addon:jar">
+  <artifact type="jar" build-on-make="true" name="twitch-request-hotkey-addon:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/twitch_request_hotkey_addon_jar</output-path>
     <root id="archive" name="twitch-request-hotkey-addon.jar">
       <element id="module-output" name="twitch-request-hotkey-addon" />

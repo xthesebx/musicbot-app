@@ -38,7 +38,9 @@ public class RealFrame extends JFrame implements HotKeyListener {
         try {
             file = new JSONObject(Files.readString(Path.of("hotkeys")));
             play = file.getString("play");
+            if (play.isEmpty()) play = "MEDIA_PLAY_PAUSE";
             skip = file.getString("skip");
+            if (skip.isEmpty()) skip = "MEDIA_NEXT_TRACK";
         } catch (IOException | JSONException e) {
             if (!(e instanceof NoSuchFileException))
                 System.err.println(e);
@@ -171,6 +173,15 @@ public class RealFrame extends JFrame implements HotKeyListener {
         playSong.addActionListener(e -> {
             ConnectButton.out.println("play " + url.getText().strip());
             url.setText("");
+        });
+        url.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    ConnectButton.out.println("play " + url.getText().strip());
+                    url.setText("");
+                }
+            }
         });
         JPanel bottompanel2 = new JPanel(new BorderLayout());
         JButton shuffle = new JButton("Shuffle");
