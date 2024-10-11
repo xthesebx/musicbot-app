@@ -57,6 +57,7 @@ public class QueueController {
                 JSONObject deleteObj = new JSONObject();
                 deleteObj.put("delete", delete);
                 application.connector.out.println(deleteObj);
+                System.out.println(delete);
                 queueTable.setItems(FXCollections.observableArrayList(queue));
                 queueTable.refresh();
             }

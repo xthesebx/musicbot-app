@@ -82,15 +82,26 @@ public class MainWindowController implements HotKeyListener {
                 System.err.println(e);
         }
 
-        if (!play.equals("MEDIA_PLAY_PAUSE")) provider.register(KeyStroke.getKeyStroke(play), this);
-        else provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
+        if (!play.equals("MEDIA_PLAY_PAUSE") && !play.isEmpty()){
+            provider.register(KeyStroke.getKeyStroke(play), this);
+            buttons.put("play", play);
+        }
+        else if (!play.isEmpty()) {
+            provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
+            buttons.put("play", play);
+        }
         PlayPause.setText(play);
-        buttons.put("play", play);
 
-        if (!skip.equals("MEDIA_NEXT_TRACK")) provider.register(KeyStroke.getKeyStroke(skip), this);
-        else provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
+        if (!skip.equals("MEDIA_NEXT_TRACK") && !skip.isEmpty()) {
+            provider.register(KeyStroke.getKeyStroke(skip), this);
+            buttons.put("skip", skip);
+        }
+        else if (!skip.isEmpty()) {
+            provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
+            buttons.put("skip", skip);
+        }
         Skip.setText(skip);
-        buttons.put("skip", skip);
+
         url.setOnKeyPressed(e -> {
             if (e.getCode().getCode() == 10) {
                 onPlay();

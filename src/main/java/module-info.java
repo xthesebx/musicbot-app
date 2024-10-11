@@ -1,4 +1,4 @@
-module com.seb.demo {
+module com.seb.musicapp {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
