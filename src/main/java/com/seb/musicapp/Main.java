@@ -1,5 +1,6 @@
 package com.seb.musicapp;
 
+import Discord.DiscordActivity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public Connector connector;
     public Stage stage;
     public Scene scene;
@@ -17,11 +18,17 @@ public class Main extends Application {
     public QueueController queueController;
     public MainWindowController mainWindowController;
     public ConnectController connectController;
+    public DiscordActivity discordActivity;
 
     @Override
     public void start(Stage stage) throws IOException, InterruptedException {
         this.stage = stage;
         initialise();
+        DiscordActivity.create().ifPresent(this::setDiscordActivity);
+    }
+
+    private void setDiscordActivity(DiscordActivity discordActivity) {
+        this.discordActivity = discordActivity;
     }
 
     public void initialise() throws IOException {

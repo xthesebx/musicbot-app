@@ -5,8 +5,14 @@ module com.seb.musicapp {
     requires java.logging;
     requires org.json;
     requires jkeymaster;
+    requires discord.game.sdk;
+    requires Logger;
 
 
     opens com.seb.musicapp to javafx.fxml;
     exports com.seb.musicapp;
+    exports Discord;
+    opens Discord to javafx.fxml;
+    exports Discord.OS;
+    opens Discord.OS to javafx.fxml;
 }

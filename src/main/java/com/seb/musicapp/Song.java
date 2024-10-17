@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Song {
-    private StringProperty songName, artist, duration;
+    private StringProperty songName, artist, duration, url;
 
     public String getSongName() {
         return songName.get();
@@ -42,9 +42,22 @@ public class Song {
         this.duration.set(duration);
     }
 
-    public Song(String songName, String artist, String duration) {
+    public String getUrl() {
+        return url.get();
+    }
+
+    public StringProperty urlProperty() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url.set(url);
+    }
+
+    public Song(String songName, String artist, String duration, String url) {
         this.songName = new SimpleStringProperty(this, "title", songName);
         this.artist = new SimpleStringProperty(this, "artist", artist);
         this.duration = new SimpleStringProperty(this, "duration", duration);
+        this.url = new SimpleStringProperty(this, "url", url);
     }
 }

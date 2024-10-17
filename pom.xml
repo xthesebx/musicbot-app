@@ -14,8 +14,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
     </properties>
-
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
+        <dependency>
+            <groupId>com.github.JnCrMx</groupId>
+            <artifactId>discord-game-sdk4j</artifactId>
+            <version>4dc748f486</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hawolt.hawolt-core</groupId>
+            <artifactId>Logger</artifactId>
+            <version>898c981f5b</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -63,6 +78,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.github.makingthematrix</groupId>
+                <artifactId>scala-suffix-maven-plugin</artifactId>
+                <version>0.1.0</version>
+                <configuration>
+                    <libraries>
+                        <param>Logger</param>
+                        <param>discord-game-sdk4j</param>
+                    </libraries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>suffix</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -1,5 +1,6 @@
 package com.seb.musicapp;
 
+import com.hawolt.logger.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
@@ -12,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.event.KeyEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +125,7 @@ public class QueueController {
             JSONObject obj = data.getJSONObject("insert");
             for (String s : obj.keySet()) {
                 JSONObject insObj = obj.getJSONObject(s);
-                queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration")));
+                queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
                 queueTable.setItems(FXCollections.observableArrayList(queue));
                 insObj.clear();
             }
@@ -132,14 +134,14 @@ public class QueueController {
         if (data.has("queue")) {
             JSONArray add = data.optJSONArray("queue");
             for (Object o : add) {
-                queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration")));
+                queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
                 queueTable.setItems(FXCollections.observableArrayList(queue));
             }
             add.clear();
         }
         if (data.has("next")) {
-            System.out.println(data);
             for (int i = 0; i < data.getInt("next"); i++) {
+                application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), 50, queue.get(0).getUrl(), true);
                 queue.remove(0);
             }
             queueTable.setItems(FXCollections.observableArrayList(queue));
