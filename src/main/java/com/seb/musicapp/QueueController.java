@@ -1,6 +1,10 @@
 package com.seb.musicapp;
 
 import com.hawolt.logger.Logger;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
@@ -13,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +36,8 @@ public class QueueController {
     TableColumn<Song, String> queueLength;
     Main application;
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
+    private RepeatState repeatState = RepeatState.NO_REPEAT;
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public QueueController() {
         super();
@@ -53,8 +61,8 @@ public class QueueController {
             if (e.getCode().getCode() == KeyEvent.VK_DELETE || e.getCode().getCode() == KeyEvent.VK_BACK_SPACE) {
                 JSONArray delete = new JSONArray();
                 queueTable.getSelectionModel().getSelectedItems().forEach(o -> {
-                        delete.put(queue.indexOf(o));
-                        queue.remove(o);
+                    delete.put(queue.indexOf(o));
+                    queue.remove(o);
                 });
                 JSONObject deleteObj = new JSONObject();
                 deleteObj.put("delete", delete);
@@ -68,7 +76,7 @@ public class QueueController {
             TableRow<Song> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
-                if (! row.isEmpty()) {
+                if (!row.isEmpty()) {
                     Integer index = row.getIndex();
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
@@ -82,7 +90,7 @@ public class QueueController {
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
                     }
@@ -95,10 +103,10 @@ public class QueueController {
                     int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
                     Song draggedPerson = queueTable.getItems().remove(draggedIndex);
 
-                    int dropIndex ;
+                    int dropIndex;
 
                     if (row.isEmpty()) {
-                        dropIndex = queueTable.getItems().size() ;
+                        dropIndex = queueTable.getItems().size();
                     } else {
                         dropIndex = row.getIndex();
                     }
@@ -112,7 +120,7 @@ public class QueueController {
                 }
             });
 
-            return row ;
+            return row;
         });
     }
 
@@ -146,7 +154,25 @@ public class QueueController {
             }
             queueTable.setItems(FXCollections.observableArrayList(queue));
         }
+        if (data.has("repeat")) {
+            switch (data.getString("repeat")) {
+                case "NO_REPEAT" -> repeatState = RepeatState.NO_REPEAT;
+                case "REPEAT_QUEUE" -> repeatState = RepeatState.REPEAT_QUEUE;
+                case "REPEAT_SINGLE" -> repeatState = RepeatState.REPEAT_SINGLE;
+            }
+            propertyChangeSupport.firePropertyChange("repeatState", null, repeatState);
+        }
+        if (data.has("volume")) {
+            int vol = data.getInt("volume");
+            Platform.runLater(() -> {
+                application.mainWindowController.setVolume(vol);
+            });
+        }
         queueTable.refresh();
         data.clear();
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
     }
 }

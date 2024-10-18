@@ -2,6 +2,7 @@ package com.seb.musicapp;
 
 import Discord.DiscordActivity;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     public Connector connector;
     public Stage stage;
     public Scene scene;
@@ -34,7 +35,7 @@ public class Main extends Application {
     public void initialise() throws IOException {
         this.connector = new Connector(this);
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
-        scene = new Scene(fxmlLoader.load(), 320, 150);
+        scene = new Scene(fxmlLoader.load(), 400, 200);
         stage.setTitle("Connect");
         stage.setScene(scene);
         stage.show();
@@ -79,9 +80,27 @@ public class Main extends Application {
             FXMLLoader finalFxmlLoader = fxmlLoader;
             queueController = finalFxmlLoader.getController();
             queueController.setApp(this);
+            queueController.addPropertyChangeListener(mainWindowController);
             new Thread(() -> ((QueueController) finalFxmlLoader.getController()).setItems()).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reset() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
+                scene.setRoot(fxmlLoader.load());
+                stage.setTitle("Connect");
+                stage.setScene(scene);
+                stage.show();
+                connectController = fxmlLoader.getController();
+                connectController.setApplication(this);
+                queueStage.close();
+            } catch (IOException e) {
+
+            }
+        });
     }
 }

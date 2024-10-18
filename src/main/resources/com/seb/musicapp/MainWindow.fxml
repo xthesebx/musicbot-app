@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -19,6 +20,8 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <Label fx:id="PlayPause" />
@@ -27,14 +30,20 @@
       <Button fx:id="changeSkip" mnemonicParsing="false" onAction="#onChangeSkip" text="Set Skip Hotkey" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Button fx:id="mediaPlay" mnemonicParsing="false" onAction="#onMediaPlay" text="Set Play/Pause to Media Key" GridPane.columnIndex="2" />
       <Button fx:id="mediaSkip" mnemonicParsing="false" onAction="#onMediaSkip" text="Set Skip to Media Key" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Button fx:id="join" mnemonicParsing="false" onAction="#onJoin" text="Join" GridPane.rowIndex="2" />
-      <Button fx:id="leave" mnemonicParsing="false" onAction="#onLeave" text="Leave" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <Button fx:id="shuffle" mnemonicParsing="false" onAction="#onShuffle" text="Shuffle" GridPane.rowIndex="3" />
-      <Button fx:id="play" mnemonicParsing="false" onAction="#onPlay" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Button fx:id="queue" mnemonicParsing="false" onAction="#onQueue" text="Queue" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <Button fx:id="setStreamerMode" mnemonicParsing="false" onAction="#onSetStreamerMode" text="Set Streamer Mode" GridPane.rowIndex="4" />
-      <TextField fx:id="twitchname" promptText="Twtich Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextField fx:id="url" promptText="Song/Playlist url" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Button fx:id="stop" mnemonicParsing="false" onAction="#onStop" text="Stop" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Button fx:id="join" mnemonicParsing="false" onAction="#onJoin" text="Join" GridPane.rowIndex="3" />
+      <Button fx:id="leave" mnemonicParsing="false" onAction="#onLeave" text="Leave" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <Button fx:id="shuffle" mnemonicParsing="false" onAction="#onShuffle" text="Shuffle" GridPane.rowIndex="4" />
+      <Button fx:id="play" mnemonicParsing="false" onAction="#onPlay" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Button fx:id="queue" mnemonicParsing="false" onAction="#onQueue" text="Queue" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Button fx:id="setStreamerMode" mnemonicParsing="false" onAction="#onSetStreamerMode" text="Set Streamer Mode" GridPane.rowIndex="6" />
+      <TextField fx:id="twitchname" promptText="Twtich Name" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="url" promptText="Song/Playlist url" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Button fx:id="stop" mnemonicParsing="false" onAction="#onStop" text="Stop" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label fx:id="prev" GridPane.rowIndex="2" />
+      <Button fx:id="changePrev" mnemonicParsing="false" onAction="#onChangePrev" text="Set Previous Hotkey" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Button fx:id="mediaPrev" mnemonicParsing="false" onAction="#onMediaPrev" text="Set Previous to Media Key" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeat" text="No Repeat" GridPane.rowIndex="5" />
+      <Button fx:id="toggleRequests" mnemonicParsing="false" onAction="#onToggleRequests" text="Toggle Requests" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <Slider fx:id="volume" majorTickUnit="10.0" minorTickCount="1" onKeyPressed="#onSliderChange" onMouseReleased="#onSliderChange" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
    </children>
 </GridPane>

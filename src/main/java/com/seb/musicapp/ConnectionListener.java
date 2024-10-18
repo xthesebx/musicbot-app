@@ -26,13 +26,8 @@ public class ConnectionListener implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
             if (e instanceof SocketException) {
-                try {
-                    application.initialise();
-                    application.queueStage.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
                 application.mainWindowController.getProvider().reset();
+                application.reset();
             }
             else
                 e.printStackTrace();
