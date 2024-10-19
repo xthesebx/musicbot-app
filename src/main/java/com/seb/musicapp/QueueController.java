@@ -148,14 +148,16 @@ public class QueueController {
             add.clear();
         }
         if (data.has("next")) {
-            for (int i = 0; i < data.getInt("next"); i++) {
-                String dur = queue.get(0).getDuration();
-                int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
-                int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
-                application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
-                queue.remove(0);
-            }
-            queueTable.setItems(FXCollections.observableArrayList(queue));
+            if (!queue.isEmpty()) {
+                for (int i = 0; i < data.getInt("next"); i++) {
+                    String dur = queue.get(0).getDuration();
+                    int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
+                    int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
+                    application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
+                    queue.remove(0);
+                }
+                queueTable.setItems(FXCollections.observableArrayList(queue));
+            } else application.discordActivity.setIdlePresence();
         }
         if (data.has("repeat")) {
             switch (data.getString("repeat")) {
