@@ -88,6 +88,7 @@ public class Main extends Application {
     }
 
     public void reset() {
+        mainWindowController.getProvider().reset();
         Platform.runLater(() -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));

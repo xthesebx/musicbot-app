@@ -21,12 +21,16 @@ public class ConnectionListener implements Runnable {
         String s;
         try {
             while ((s = connector.in.readLine()) != null) {
+                if (s.equals("close")) {
+                    application.reset();
+                    connector.socket.close();
+                    return;
+                }
                 application.queueController.updateTable(new JSONObject(s));
             }
         } catch (IOException e) {
             e.printStackTrace();
             if (e instanceof SocketException) {
-                application.mainWindowController.getProvider().reset();
                 application.reset();
             }
             else
