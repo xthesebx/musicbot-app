@@ -13,6 +13,10 @@ public class ConnectController {
         application.connect(ID.getText());
     }
 
+    public ConnectController() {
+        ID.setOnKeyPressed(e -> application.connect(ID.getText()));
+    }
+
     public void setApplication(Main application) {
         this.application = application;
     }
