@@ -1,6 +1,8 @@
 package com.seb.musicapp;
 
 
+import com.hawolt.logger.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -25,8 +27,13 @@ public class ConnectionListener implements Runnable {
                     application.reset();
                     connector.socket.close();
                     return;
-                }
-                application.queueController.updateTable(new JSONObject(s));
+                } else if (s.equals("idle")) application.discordActivity.setIdlePresence();
+                else if (s.startsWith("channel ")) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
+                else try {
+                        application.queueController.updateTable(new JSONObject(s));
+                    } catch (JSONException e) {
+                        Logger.error(s);
+                    }
             }
         } catch (IOException e) {
             e.printStackTrace();

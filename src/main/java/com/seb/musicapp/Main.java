@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public Connector connector;
     public Stage stage;
     public Scene scene;

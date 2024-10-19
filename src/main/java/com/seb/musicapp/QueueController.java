@@ -149,7 +149,10 @@ public class QueueController {
         }
         if (data.has("next")) {
             for (int i = 0; i < data.getInt("next"); i++) {
-                application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), 50, queue.get(0).getUrl(), true);
+                String dur = queue.get(0).getDuration();
+                int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
+                int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
+                application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
                 queue.remove(0);
             }
             queueTable.setItems(FXCollections.observableArrayList(queue));

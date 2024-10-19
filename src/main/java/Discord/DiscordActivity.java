@@ -9,6 +9,8 @@ import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.LogLevel;
 import de.jcm.discordgamesdk.activity.Activity;
+import de.jcm.discordgamesdk.activity.ActivityButton;
+import de.jcm.discordgamesdk.activity.ActivityButtonsMode;
 import de.jcm.discordgamesdk.activity.ActivityType;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 public class DiscordActivity implements Runnable {
 
     private final Activity activity;
+    private ActivityButton button, join;
 
     public static Optional<DiscordActivity> create() {
         String processName = switch (OperatingSystem.getOperatingSystemType()) {
@@ -76,7 +79,8 @@ public class DiscordActivity implements Runnable {
     }
 
     public void setIdlePresence() {
-        this.set("Currently No song Playing", "test", 0, null, false);
+        if (join != null) activity.removeButton(join);
+        this.set("Currently No song Playing", null, Instant.now(), null, null, false);
     }
 
     public void set(String details, String state, int duration, String url, boolean instance) {
@@ -85,7 +89,17 @@ public class DiscordActivity implements Runnable {
 
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
         //TODO: add buttons as soon as they work i guess lol
-        //activity.assets().setLargeImage("fullsize-logo");
+        //opened issue https://github.com/JnCrMx/discord-game-sdk4j/issues/92
+        activity.assets().setLargeImage("musicbotlogo");
+        if (url != null) {
+            if (button != null)
+                activity.removeButton(button);
+            //System.out.println(url);
+            button = new ActivityButton("Songlink", url);
+            activity.addButton(button);
+            activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
+
+        }
         activity.setType(ActivityType.LISTENING);
         activity.setDetails(details);
         activity.setState(state);
@@ -94,6 +108,17 @@ public class DiscordActivity implements Runnable {
         if (end != null && start == null) {
             activity.timestamps().setEnd(end);
         }
-        core.activityManager().updateActivity(activity);
+        try {
+            core.activityManager().updateActivity(activity);
+        } catch (RuntimeException e) {
+            Logger.error(e);
+        }
+    }
+
+    public void addJoin(String url) {
+        if (join == null) join = new ActivityButton("Join Channel", url);
+        else join.setUrl(url);
+        activity.addButton(join);
+        activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
     }
 }
