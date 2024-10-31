@@ -133,7 +133,9 @@ public class QueueController {
             JSONObject obj = data.getJSONObject("insert");
             for (String s : obj.keySet()) {
                 JSONObject insObj = obj.getJSONObject(s);
-                queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                if (Integer.parseInt(s) >= 0)
+                    queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                else queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
                 queueTable.setItems(FXCollections.observableArrayList(queue));
                 insObj.clear();
             }
