@@ -21,7 +21,6 @@ public class Connector {
     }
 
     public void connect(String id) throws IOException {
-
         socket = new Socket(ip, 4269);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -30,7 +29,6 @@ public class Connector {
         if (s.equals("no")) {
             throw new IOException();
         }
-
         new Thread(new ConnectionListener(this, application)).start();
     }
 

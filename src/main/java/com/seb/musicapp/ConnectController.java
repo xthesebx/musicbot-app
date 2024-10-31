@@ -2,6 +2,7 @@ package com.seb.musicapp;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 
 public class ConnectController {
     @FXML
@@ -14,7 +15,16 @@ public class ConnectController {
     }
 
     public ConnectController() {
-        ID.setOnKeyPressed(e -> application.connect(ID.getText()));
+        new Thread(() -> {
+            while (ID == null) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {}
+            }
+            ID.setOnKeyPressed(e -> {
+                if (e.getCode().equals(KeyCode.ENTER)) application.connect(ID.getText());
+            });
+        }).start();
     }
 
     public void setApplication(Main application) {

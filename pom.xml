@@ -27,9 +27,9 @@
             <version>4dc748f486</version>
         </dependency>
         <dependency>
-            <groupId>com.github.hawolt.hawolt-core</groupId>
+            <groupId>com.github.xthesebx.hawolt-core</groupId>
             <artifactId>Logger</artifactId>
-            <version>898c981f5b</version>
+            <version>0a302af769</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

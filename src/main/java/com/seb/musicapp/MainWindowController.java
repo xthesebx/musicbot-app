@@ -1,6 +1,5 @@
 package com.seb.musicapp;
 
-import com.hawolt.logger.Logger;
 import com.tulskiy.keymaster.common.HotKey;
 import com.tulskiy.keymaster.common.HotKeyListener;
 import com.tulskiy.keymaster.common.MediaKey;
