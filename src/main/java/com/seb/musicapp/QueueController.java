@@ -67,7 +67,6 @@ public class QueueController {
                 JSONObject deleteObj = new JSONObject();
                 deleteObj.put("delete", delete);
                 application.connector.out.println(deleteObj);
-                System.out.println(delete);
                 queueTable.setItems(FXCollections.observableArrayList(queue));
                 queueTable.refresh();
             }
@@ -116,6 +115,8 @@ public class QueueController {
                     event.setDropCompleted(true);
                     queueTable.getSelectionModel().select(dropIndex);
                     application.connector.out.println("move " + draggedIndex + " " + dropIndex);
+                    queue.remove(draggedIndex);
+                    queue.add(dropIndex, draggedPerson);
                     event.consume();
                 }
             });
@@ -127,7 +128,6 @@ public class QueueController {
     public void updateTable(JSONObject data) {
         if (data.has("clear")) {
             queue.clear();
-            queueTable.setItems(FXCollections.observableArrayList(queue));
         }
         if (data.has("insert")) {
             JSONObject obj = data.getJSONObject("insert");
@@ -136,7 +136,6 @@ public class QueueController {
                 if (Integer.parseInt(s) >= 0)
                     queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
                 else queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
-                queueTable.setItems(FXCollections.observableArrayList(queue));
                 insObj.clear();
             }
             obj.clear();
@@ -145,7 +144,6 @@ public class QueueController {
             JSONArray add = data.optJSONArray("queue");
             for (Object o : add) {
                 queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
-                queueTable.setItems(FXCollections.observableArrayList(queue));
             }
             add.clear();
         }
@@ -158,9 +156,9 @@ public class QueueController {
                     application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
                     queue.remove(0);
                 }
-                queueTable.setItems(FXCollections.observableArrayList(queue));
             } else application.discordActivity.setIdlePresence();
         }
+        queueTable.setItems(FXCollections.observableArrayList(queue));
         if (data.has("repeat")) {
             switch (data.getString("repeat")) {
                 case "NO_REPEAT" -> repeatState = RepeatState.NO_REPEAT;
