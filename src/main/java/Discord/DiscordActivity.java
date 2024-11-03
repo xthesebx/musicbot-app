@@ -117,7 +117,10 @@ public class DiscordActivity implements Runnable {
 
     public void addJoin(String url) {
         if (join == null) join = new ActivityButton("Join Channel", url);
-        else join.setUrl(url);
+        else  {
+            activity.removeButton(join);
+            join.setUrl(url);
+        }
         activity.addButton(join);
         activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
     }
