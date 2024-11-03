@@ -2,11 +2,23 @@ package Discord.OS;
 
 import java.util.Locale;
 
+/**
+ * <p>OperatingSystem class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class OperatingSystem {
+    /** Constant <code>detectedOS</code> */
     protected static OSType detectedOS;
 
     ;
 
+    /**
+     * <p>getOperatingSystemType.</p>
+     *
+     * @return a {@link Discord.OS.OperatingSystem.OSType} object
+     */
     public static OSType getOperatingSystemType() {
         if (detectedOS == null) {
             String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
@@ -23,7 +35,25 @@ public class OperatingSystem {
         return detectedOS;
     }
 
+    /**
+     * enum for different OS types
+     */
     public enum OSType {
-        WINDOWS, MAC, LINUX, UNKNOWN
+        /**
+         * Windows
+         */
+        WINDOWS,
+        /**
+         * Mac
+         */
+        MAC,
+        /**
+         * Linux
+         */
+        LINUX,
+        /**
+         * no idea man
+         */
+        UNKNOWN
     }
 }

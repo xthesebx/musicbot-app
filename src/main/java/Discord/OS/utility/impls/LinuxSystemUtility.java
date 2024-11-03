@@ -12,15 +12,19 @@ import java.util.List;
 /**
  * Created: 29/09/2023 15:20
  * Author: Twitter @hawolt
- **/
-
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class LinuxSystemUtility extends BasicSystemUtility {
+    /** {@inheritDoc} */
     @Override
     public String translate(String path) {
         if (path.contains("~")) path = path.replace("~", System.getProperty("user.home"));
         return path;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessReference> getProcessList() throws IOException {
         ProcessBuilder builder = new ProcessBuilder("ps", "aux");

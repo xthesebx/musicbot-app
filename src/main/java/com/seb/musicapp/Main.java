@@ -9,20 +9,49 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class Main extends Application {
 
+    //TODO: add search function for songs/playlists
+    //TODO: add more sources (soundcloud?)
+
+    /** Constant <code>DEBUG=false</code> */
     public static boolean DEBUG = false;
+    /**
+     * Connector object for connection to
+     */
     public Connector connector;
-    public Stage stage;
+    private Stage stage;
+    /**
+     * Scene for connector and main window
+     */
     public Scene scene;
+    /**
+     * Stage for the queue window
+     */
     public Stage queueStage;
+    /**
+     * Controller for the queue window
+     */
     public QueueController queueController;
+    /**
+     * controller for the mainwindow
+     */
     public MainWindowController mainWindowController;
-    public ConnectController connectController;
+    private ConnectController connectController;
+    /**
+     * the discord activity
+     */
     public DiscordActivity discordActivity;
 
+    /** {@inheritDoc} */
     @Override
-    public void start(Stage stage) throws IOException, InterruptedException {
+    public void start(Stage stage) throws IOException {
         this.stage = stage;
         initialise();
         DiscordActivity.create().ifPresent(this::setDiscordActivity);
@@ -32,6 +61,11 @@ public class Main extends Application {
         this.discordActivity = discordActivity;
     }
 
+    /**
+     * <p>initialise.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void initialise() throws IOException {
         this.connector = new Connector(this);
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
@@ -44,10 +78,20 @@ public class Main extends Application {
         connectController.setApplication(this);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects
+     */
     public static void main(String[] args) {
         launch();
     }
 
+    /**
+     * <p>connect.</p>
+     *
+     * @param id a {@link java.lang.String} object
+     */
     public void connect(String id) {
         try {
             connector.connect(id);
@@ -84,6 +128,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * <p>reset.</p>
+     */
     public void reset() {
         mainWindowController.getProvider().reset();
         Platform.runLater(() -> {

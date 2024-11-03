@@ -27,6 +27,12 @@ import java.nio.file.Path;
 import java.util.*;
 
 
+/**
+ * <p>MainWindowController class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class MainWindowController implements HotKeyListener, PropertyChangeListener {
 
     @FXML
@@ -79,9 +85,15 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     private static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
     private JSONObject file;
 
+    /**
+     * <p>Constructor for MainWindowController.</p>
+     */
     public MainWindowController() {
     }
 
+    /**
+     * <p>init.</p>
+     */
     public void init() {
         String play = "", skip = "", prevString = "";
         file = new JSONObject();
@@ -140,14 +152,27 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         });
     }
 
+    /**
+     * <p>Setter for the field <code>application</code>.</p>
+     *
+     * @param application a {@link com.seb.musicapp.Main} object
+     */
     public void setApplication(Main application) {
         this.application = application;
     }
 
+    /**
+     * <p>Getter for the field <code>provider</code>.</p>
+     *
+     * @return a {@link com.tulskiy.keymaster.common.Provider} object
+     */
     public Provider getProvider() {
         return provider;
     }
 
+    /**
+     * <p>onChangePlay.</p>
+     */
     @FXML
     protected void onChangePlay() {
         changePlay.setDisable(true);
@@ -171,6 +196,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             }
         });
     }
+    /**
+     * <p>onChangeSkip.</p>
+     */
     @FXML
     protected void onChangeSkip() {
         changeSkip.setDisable(true);
@@ -194,6 +222,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             }
         });
     }
+    /**
+     * <p>onChangePrev.</p>
+     */
     @FXML
     protected void onChangePrev() {
         changePrev.setDisable(true);
@@ -217,6 +248,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             }
         });
     }
+    /**
+     * <p>onMediaPlay.</p>
+     */
     @FXML
     protected void onMediaPlay() {
         if (PlayPause.getText().equals("MEDIA_PLAY_PAUSE")) return;
@@ -233,6 +267,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             throw new RuntimeException(ex);
         }
     }
+    /**
+     * <p>onMediaSkip.</p>
+     */
     @FXML
     protected void onMediaSkip() {
         if (Skip.getText().equals("MEDIA_NEXT_TRACK")) return;
@@ -249,6 +286,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             throw new RuntimeException(ex);
         }
     }
+    /**
+     * <p>onMediaPrev.</p>
+     */
     @FXML
     protected void onMediaPrev() {
         if (prev.getText().equals("MEDIA_PREV_TRACK")) return;
@@ -265,46 +305,74 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             throw new RuntimeException(ex);
         }
     }
+    /**
+     * <p>onJoin.</p>
+     */
     @FXML
     protected void onJoin() {
         application.connector.out.println("join");
     }
+    /**
+     * <p>onLeave.</p>
+     */
     @FXML
     protected void onLeave() {
         application.connector.out.println("leave");
     }
+    /**
+     * <p>onShuffle.</p>
+     */
     @FXML
     protected void onShuffle() {
         application.connector.shuffle();
     }
+    /**
+     * <p>onQueue.</p>
+     */
     @FXML
     protected void onQueue() {
         if (application.queueStage.isShowing()) application.queueStage.toFront();
         else application.queueStage.show();
     }
+    /**
+     * <p>onStop.</p>
+     */
     @FXML
     protected void onStop() {
         application.connector.out.println("stop");
     }
+    /**
+     * <p>onSetStreamerMode.</p>
+     */
     @FXML
     protected void onSetStreamerMode() {
         application.connector.out.println("streamer " + twitchname.getText());
         twitchname.setText("");
     }
+    /**
+     * <p>onPlay.</p>
+     */
     @FXML
     protected void onPlay() {
         application.connector.out.println("play " + url.getText().strip());
         url.setText("");
     }
+    /**
+     * <p>onRepeat.</p>
+     */
     @FXML
     protected void onRepeat() {
         application.connector.out.println("repeat");
     }
+    /**
+     * <p>onToggleRequests.</p>
+     */
     @FXML
     protected void onToggleRequests() {
         application.connector.out.println("toggle");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onHotKey(HotKey hotKey) {
         if (hotKey.keyStroke != null) {
@@ -326,14 +394,23 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         }
     }
 
+    /**
+     * <p>setRepeatState.</p>
+     *
+     * @param state a {@link com.seb.musicapp.RepeatState} object
+     */
     public void setRepeatState (RepeatState state) {
     }
 
+    /**
+     * <p>onSliderChange.</p>
+     */
     @FXML
     protected void onSliderChange() {
         application.connector.out.println("volume " + Math.round(volume.getValue()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Platform.runLater(() -> {
@@ -346,6 +423,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         });
     }
 
+    /**
+     * <p>Setter for the field <code>volume</code>.</p>
+     *
+     * @param vol a int
+     */
     public void setVolume(int vol) {
         volume.setValue(vol);
     }

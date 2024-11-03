@@ -9,7 +9,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+/**
+ * <p>Abstract BasicSystemUtility class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public abstract class BasicSystemUtility implements SystemUtility {
+    /**
+     * <p>readStream.</p>
+     *
+     * @param stream a {@link java.io.InputStream} object
+     * @return a {@link java.lang.String} object
+     * @throws java.io.IOException if any.
+     */
     protected static String readStream(InputStream stream) throws IOException {
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
@@ -21,6 +34,7 @@ public abstract class BasicSystemUtility implements SystemUtility {
         return output.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<ProcessReference> getProcessByPID(int pid) throws IOException {
         return getProcessList()
@@ -29,6 +43,7 @@ public abstract class BasicSystemUtility implements SystemUtility {
                 .findAny();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int[] getProcessByName(String name) throws IOException {
         return getProcessList()
@@ -38,6 +53,7 @@ public abstract class BasicSystemUtility implements SystemUtility {
                 .toArray();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isProcessRunning(String name) throws IOException {
         return getProcessByName(name).length > 0;

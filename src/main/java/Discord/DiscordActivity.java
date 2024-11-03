@@ -18,11 +18,22 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * <p>DiscordActivity class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class DiscordActivity implements Runnable {
 
     private final Activity activity;
     private ActivityButton button, join;
 
+    /**
+     * <p>create.</p>
+     *
+     * @return a {@link java.util.Optional} object
+     */
     public static Optional<DiscordActivity> create() {
         String processName = switch (OperatingSystem.getOperatingSystemType()) {
             case MAC -> "Discord.app";
@@ -49,6 +60,7 @@ public class DiscordActivity implements Runnable {
         activity = new Activity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run() {
         try {
@@ -78,15 +90,37 @@ public class DiscordActivity implements Runnable {
         }
     }
 
+    /**
+     * <p>setIdlePresence.</p>
+     */
     public void setIdlePresence() {
         if (join != null) activity.removeButton(join);
         this.set("Currently No song Playing", null, Instant.now(), null, null, false);
     }
 
+    /**
+     * <p>set.</p>
+     *
+     * @param details a {@link java.lang.String} object
+     * @param state a {@link java.lang.String} object
+     * @param duration a int
+     * @param url a {@link java.lang.String} object
+     * @param instance a boolean
+     */
     public void set(String details, String state, int duration, String url, boolean instance) {
         this.set(details, state, null, Instant.now().plusSeconds(duration), url, instance);
     }
 
+    /**
+     * <p>set.</p>
+     *
+     * @param details a {@link java.lang.String} object
+     * @param state a {@link java.lang.String} object
+     * @param start a {@link java.time.Instant} object
+     * @param end a {@link java.time.Instant} object
+     * @param url a {@link java.lang.String} object
+     * @param instance a boolean
+     */
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
         //TODO: add buttons as soon as they work i guess lol
         //opened issue https://github.com/JnCrMx/discord-game-sdk4j/issues/92
@@ -115,6 +149,11 @@ public class DiscordActivity implements Runnable {
         }
     }
 
+    /**
+     * <p>addJoin.</p>
+     *
+     * @param url a {@link java.lang.String} object
+     */
     public void addJoin(String url) {
         if (join == null) join = new ActivityButton("Join Channel", url);
         else  {

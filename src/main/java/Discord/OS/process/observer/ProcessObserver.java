@@ -8,18 +8,27 @@ import java.io.IOException;
 /**
  * Created: 29/09/2023 19:29
  * Author: Twitter @hawolt
- **/
-
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class ProcessObserver implements Runnable {
     private final ProcessCallback callback;
     private final String name;
     private ProcessCallback.State state = ProcessCallback.State.UNKNOWN;
 
+    /**
+     * <p>Constructor for ProcessObserver.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     * @param callback a {@link Discord.OS.process.observer.ProcessCallback} object
+     */
     public ProcessObserver(String name, ProcessCallback callback) {
         this.callback = callback;
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run() {
         ProcessCallback.State current;

@@ -12,14 +12,18 @@ import java.util.List;
 /**
  * Created: 29/09/2023 15:20
  * Author: Twitter @hawolt
- **/
-
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class WindowsSystemUtility extends BasicSystemUtility {
+    /** {@inheritDoc} */
     @Override
     public String translate(String path) {
         return path;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProcessReference> getProcessList() throws IOException {
         ProcessBuilder builder = new ProcessBuilder("WMIC", "path", "win32_process", "get", "Caption,Processid");

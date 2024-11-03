@@ -8,16 +8,29 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.SocketException;
 
+/**
+ * <p>ConnectionListener class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class ConnectionListener implements Runnable {
 
     private final Connector connector;
     private final Main application;
 
+    /**
+     * <p>Constructor for ConnectionListener.</p>
+     *
+     * @param connector a {@link com.seb.musicapp.Connector} object
+     * @param application a {@link com.seb.musicapp.Main} object
+     */
     public ConnectionListener(Connector connector, Main application) {
         this.connector = connector;
         this.application = application;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run()  {
         String s;

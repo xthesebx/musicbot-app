@@ -24,7 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * <p>QueueController class.</p>
+ *
+ * @author xXTheSebXx
+ * @version 1.0-SNAPSHOT
+ */
 public class QueueController {
+    /**
+     * Liste für die queue
+     */
     public List<Song> queue = new ArrayList<>();
     @FXML
     TableView<Song> queueTable;
@@ -39,14 +48,25 @@ public class QueueController {
     private RepeatState repeatState = RepeatState.NO_REPEAT;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
+    /**
+     * <p>Constructor for QueueController.</p>
+     */
     public QueueController() {
         super();
     }
 
+    /**
+     * <p>setApp.</p>
+     *
+     * @param application a {@link com.seb.musicapp.Main} object
+     */
     public void setApp(Main application) {
         this.application = application;
     }
 
+    /**
+     * <p>setItems.</p>
+     */
     public void setItems() {
         while (queueTable == null) System.out.println("null");
         queueTable.setItems(FXCollections.observableArrayList(queue));
@@ -125,6 +145,11 @@ public class QueueController {
         });
     }
 
+    /**
+     * <p>updateTable.</p>
+     *
+     * @param data a {@link org.json.JSONObject} object
+     */
     public void updateTable(JSONObject data) {
         if (data.has("clear")) {
             queue.clear();
@@ -177,6 +202,11 @@ public class QueueController {
         data.clear();
     }
 
+    /**
+     * <p>addPropertyChangeListener.</p>
+     *
+     * @param listener a {@link java.beans.PropertyChangeListener} object
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
