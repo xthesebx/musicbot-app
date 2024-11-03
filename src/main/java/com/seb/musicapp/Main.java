@@ -39,6 +39,7 @@ public class Main extends Application {
         stage.setTitle("Connect");
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(_ -> System.exit(0));
         connectController = fxmlLoader.getController();
         connectController.setApplication(this);
     }
@@ -63,10 +64,6 @@ public class Main extends Application {
             stage.setTitle("Music Bot App");
             stage.setScene(scene);
             mainWindowController.init();
-            stage.setOnCloseRequest(event -> {
-                queueStage.close();
-                System.exit(0);
-            });
             queueStage = new Stage();
             queueStage.setTitle("Queue");
             fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
