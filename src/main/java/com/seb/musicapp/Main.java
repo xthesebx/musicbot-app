@@ -26,7 +26,7 @@ public class Main extends Application {
      * Connector object for connection to
      */
     public Connector connector;
-    private Stage stage;
+    public Stage stage;
     /**
      * Scene for connector and main window
      */

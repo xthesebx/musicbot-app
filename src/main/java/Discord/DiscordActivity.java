@@ -123,7 +123,6 @@ public class DiscordActivity implements Runnable {
      */
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
         //TODO: add buttons as soon as they work i guess lol
-        //opened issue https://github.com/JnCrMx/discord-game-sdk4j/issues/92
         activity.assets().setLargeImage("musicbotlogo");
         if (url != null) {
             if (button != null)

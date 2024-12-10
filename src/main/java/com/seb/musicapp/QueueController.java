@@ -1,10 +1,6 @@
 package com.seb.musicapp;
 
-import com.hawolt.logger.Logger;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
@@ -178,10 +174,15 @@ public class QueueController {
                     String dur = queue.get(0).getDuration();
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
+                    String songName = queue.get(0).getSongName();
                     application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
+                    Platform.runLater(() -> application.stage.setTitle(songName));
                     queue.remove(0);
                 }
-            } else application.discordActivity.setIdlePresence();
+            } else {
+                application.discordActivity.setIdlePresence();
+                Platform.runLater(() -> application.stage.setTitle("Music Bot App"));
+            }
         }
         queueTable.setItems(FXCollections.observableArrayList(queue));
         if (data.has("repeat")) {
@@ -205,7 +206,6 @@ public class QueueController {
     /**
      * <p>addPropertyChangeListener.</p>
      *
-     * @param listener a {@link java.beans.PropertyChangeListener} object
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
