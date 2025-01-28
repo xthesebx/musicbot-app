@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Patcher:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Patcher_jar</output-path>
+    <root id="archive" name="Updater.jar">
+      <element id="module-output" name="Patcher" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/xthesebx/hawolt-core/IO/0a302af769/IO-0a302af769.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/json/json/20230618/json-20230618.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/xthesebx/hawolt-core/Logger/0a302af769/Logger-0a302af769.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

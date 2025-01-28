@@ -7,6 +7,11 @@
     <groupId>com.seb</groupId>
     <artifactId>MusicApp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>Patcher</module>
+        <module>App</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -20,137 +25,4 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>com.github.JnCrMx</groupId>
-            <artifactId>discord-game-sdk4j</artifactId>
-            <version>4dc748f486</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.xthesebx.hawolt-core</groupId>
-            <artifactId>Logger</artifactId>
-            <version>0a302af769</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.tulskiy</groupId>
-            <artifactId>jkeymaster</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>17.0.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>17.0.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>io.github.makingthematrix</groupId>
-                <artifactId>scala-suffix-maven-plugin</artifactId>
-                <version>0.1.0</version>
-                <configuration>
-                    <libraries>
-                        <param>Logger</param>
-                        <param>discord-game-sdk4j</param>
-                    </libraries>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>suffix</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <source>23</source>
-                    <target>23</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.seb.demo/com.seb.musicapp.Launcher</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.2</version>
-                <configuration>
-                    <source>23</source>
-                    <defaultAuthor>xXTheSebXx</defaultAuthor>
-                    <defaultVersion>${project.version}</defaultVersion>
-                    <version>true</version>
-                    <author>true</author>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>update</id>
-                        <goals>
-                            <goal>fix</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>javadoc</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
