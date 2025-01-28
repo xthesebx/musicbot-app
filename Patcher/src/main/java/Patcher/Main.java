@@ -39,7 +39,7 @@ public class Main {
             AtomicReference<String> downloadlink = new AtomicReference<>("");
             assets.forEach(asset -> {
                 if (((JSONObject) asset).getString("name").equals("MusicApp.jar"))
-                    downloadlink.set(assets.getJSONObject(0).getString("browser_download_url"));
+                    downloadlink.set(((JSONObject) asset).getString("browser_download_url"));
             });
             try (BufferedInputStream bis = new BufferedInputStream(new URL(downloadlink.get()).openStream());
                  FileOutputStream fos = new FileOutputStream("MusicApp.jar")) {
