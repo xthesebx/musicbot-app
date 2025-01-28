@@ -170,7 +170,6 @@ public class Main extends Application {
         URL url = new URL("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        int status = con.getResponseCode();
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer content = new StringBuffer();
@@ -185,11 +184,11 @@ public class Main extends Application {
             JSONArray assets = obj.getJSONArray("assets");
             AtomicReference<String> downloadlink = new AtomicReference<>("");
             assets.forEach(asset -> {
-                if (((JSONObject) asset).getString("name").equals("Updater.jar"))
-                    downloadlink.set(assets.getJSONObject(0).getString("browser_download_url"));
+                if (((JSONObject) asset).getString("name").equals("musicapp.exe"))
+                    downloadlink.set(((JSONObject) asset).getString("browser_download_url"));
             });
             try (BufferedInputStream bis = new BufferedInputStream(new URL(downloadlink.get()).openStream());
-                 FileOutputStream fos = new FileOutputStream("Updater.jar")) {
+                 FileOutputStream fos = new FileOutputStream("musicapp.exe")) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = bis.read(buffer, 0, 1024)) != -1) {
