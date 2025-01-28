@@ -161,7 +161,12 @@ public class Main extends Application {
     private static void patchPatcher() throws IOException {
 
         String version = Reader.read(new File("version.txt"));
-        float f = Float.parseFloat(version);
+        float f;
+        try {
+            f = Float.parseFloat(version);
+        } catch (NullPointerException e) {
+            f = 0.0f;
+        }
         URL url = new URL("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
