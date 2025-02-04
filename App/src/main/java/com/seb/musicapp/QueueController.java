@@ -4,12 +4,10 @@ import com.hawolt.logger.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
+import javafx.scene.layout.Pane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -106,6 +104,27 @@ public class QueueController {
             });
 
             row.setOnDragOver(event -> {
+
+                final double scrollAreaHeight = 30;
+                final double scrollSpeed = .02;
+
+                Pane header = (Pane)queueTable.lookup("TableHeaderRow");
+                double yTable = queueTable.localToScreen(queueTable.getBoundsInLocal()).getMinY();
+                double yContentStart = yTable + header.getHeight();
+                double yContentEnd = yTable + queueTable.getHeight();
+
+                double y = event.getScreenY();
+                boolean scrollUp = y < yContentStart + scrollAreaHeight;
+                boolean scrollDown = y > yContentEnd - scrollAreaHeight;
+
+                if (scrollUp || scrollDown) {
+                    ScrollBar verticalScrollBar = (ScrollBar)queueTable.lookup(".scroll-bar:vertical");
+                    double offset = scrollUp ? - scrollSpeed : scrollSpeed;
+                    if (verticalScrollBar.getValue() + offset < verticalScrollBar.getMin()) verticalScrollBar.setValue(verticalScrollBar.getMin());
+                    else
+                        verticalScrollBar.setValue(Math.min(verticalScrollBar.getValue() + offset, verticalScrollBar.getMax()));
+                }
+
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                     if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
