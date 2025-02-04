@@ -3,7 +3,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
-<TableView fx:id="queueTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="com.seb.musicapp.QueueController">
+<TableView fx:id="queueTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seb.musicapp.QueueController">
   <columns>
     <TableColumn fx:id="queueTitle" prefWidth="75.0" sortable="false" text="Title" />
     <TableColumn fx:id="queueArtist" prefWidth="75.0" sortable="false" text="Artist" />

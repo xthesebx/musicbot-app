@@ -8,6 +8,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 1.0-SNAPSHOT
  */
 public class Main extends Application {
+    String cssDark = Main.class.getResource("dark.css").toExternalForm();
 
     /** Constant <code>DEBUG=false</code> */
     public static boolean DEBUG = false;
@@ -31,6 +34,8 @@ public class Main extends Application {
      * Connector object for connection to
      */
     public Connector connector;
+    public Theme theme;
+    Scene queueScene;
     public Stage stage;
     /**
      * Scene for connector and main window
@@ -75,11 +80,16 @@ public class Main extends Application {
         this.connector = new Connector(this);
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
         scene = new Scene(fxmlLoader.load(), 400, 200);
+        connectController = fxmlLoader.getController();
+        fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
+        queueScene = new Scene(fxmlLoader.load(), 320, 800);
+        queueController = fxmlLoader.getController();
+        String theme = Reader.read(new File("theme"));
+        setTheme(theme);
         stage.setTitle("Connect");
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(_ -> System.exit(0));
-        connectController = fxmlLoader.getController();
         connectController.setApplication(this);
     }
 
@@ -119,19 +129,16 @@ public class Main extends Application {
             mainWindowController.init();
             queueStage = new Stage();
             queueStage.setTitle("Queue");
-            fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
-            Scene queueScene = new Scene(fxmlLoader.load(), 320, 800);
+            queueScene.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
             queueStage.setTitle("Queue");
             queueStage.setScene(queueScene);
             queueStage.setOnCloseRequest(event -> {
                 event.consume();
                 queueStage.hide();
             });
-            FXMLLoader finalFxmlLoader = fxmlLoader;
-            queueController = finalFxmlLoader.getController();
             queueController.setApp(this);
             queueController.addPropertyChangeListener(mainWindowController);
-            new Thread(() -> ((QueueController) finalFxmlLoader.getController()).setItems()).start();
+            new Thread(() -> queueController.setItems()).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,5 +206,20 @@ public class Main extends Application {
             }
             Writer.write(String.valueOf(versionNew), new File("version.txt"));
         }
+    }
+
+    public void setTheme(String theme) {
+        if (theme == null || theme.isEmpty() || theme.equals("light")) {
+            theme = "light";
+            scene.getStylesheets().remove(cssDark);
+            queueScene.getStylesheets().remove(cssDark);
+            this.theme = Theme.Light;
+        }
+        else if (theme.equals("dark")) {
+            scene.getStylesheets().add(cssDark);
+            queueScene.getStylesheets().add(cssDark);
+            this.theme = Theme.Dark;
+        }
+        Writer.write(theme, new File("theme"));
     }
 }

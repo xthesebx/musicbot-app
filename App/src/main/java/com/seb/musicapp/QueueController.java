@@ -1,5 +1,6 @@
 package com.seb.musicapp;
 
+import com.hawolt.logger.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -65,6 +66,7 @@ public class QueueController {
      */
     public void setItems() {
         while (queueTable == null) System.out.println("null");
+        queueTable.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
         queueTable.setItems(FXCollections.observableArrayList(queue));
         queueTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
         queueArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
@@ -89,6 +91,7 @@ public class QueueController {
         });
         queueTable.setRowFactory(tv -> {
             TableRow<Song> row = new TableRow<>();
+            row.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
 
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {

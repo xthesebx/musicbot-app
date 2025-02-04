@@ -10,11 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 
 
 /**
@@ -62,13 +66,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     private Button stop;
     @FXML
-    private Button setStreamerMode;
+    private Button streamerStuff;
     @FXML
     private TextField url;
     @FXML
-    private TextField twitchname;
-    @FXML
-    private Button toggleRequests;
+    private Button modeChange;
     @FXML
     private Button repeat;
     @FXML
@@ -145,10 +147,17 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 onPlay();
             }
         });
-        twitchname.setOnKeyPressed(e -> {
+        /*twitchname.setOnKeyPressed(e -> {
             if (e.getCode().getCode() == 10) {
                 onSetStreamerMode();
             }
+        });*/
+
+        if (application.theme == Theme.Dark) Platform.runLater(() -> {
+            modeChange.setText("Light Mode");
+        });
+        else if (application.theme == Theme.Light) Platform.runLater(() -> {
+            modeChange.setText("Dark Mode");
         });
     }
 
@@ -345,9 +354,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      * <p>onSetStreamerMode.</p>
      */
     @FXML
-    protected void onSetStreamerMode() {
-        application.connector.out.println("streamer " + twitchname.getText());
-        twitchname.setText("");
+    protected void onStreamerStuff() {
+        /*application.connector.out.println("streamer " + twitchname.getText());
+        twitchname.setText("");*/
     }
     /**
      * <p>onPlay.</p>
@@ -368,8 +377,15 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      * <p>onToggleRequests.</p>
      */
     @FXML
-    protected void onToggleRequests() {
-        application.connector.out.println("toggle");
+    protected void onChangeTheme() {
+        if (application.theme == Theme.Dark) Platform.runLater(() -> {
+            application.setTheme("light");
+            modeChange.setText("Dark Mode");
+        });
+        else if (application.theme == Theme.Light) Platform.runLater(() -> {
+            application.setTheme("dark");
+            modeChange.setText("Light Mode");
+        });
     }
 
     /** {@inheritDoc} */

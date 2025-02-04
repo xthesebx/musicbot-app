@@ -35,15 +35,14 @@
       <Button fx:id="shuffle" mnemonicParsing="false" onAction="#onShuffle" text="Shuffle" GridPane.rowIndex="4" />
       <Button fx:id="play" mnemonicParsing="false" onAction="#onPlay" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Button fx:id="queue" mnemonicParsing="false" onAction="#onQueue" text="Queue" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-      <Button fx:id="setStreamerMode" mnemonicParsing="false" onAction="#onSetStreamerMode" text="Set Streamer Mode" GridPane.rowIndex="6" />
-      <TextField fx:id="twitchname" promptText="Twtich Name" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Button fx:id="streamerStuff" mnemonicParsing="false" onAction="#onStreamerStuff" text="Streamer Stuff" GridPane.rowIndex="6" />
       <TextField fx:id="url" promptText="Song/Playlist url" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Button fx:id="stop" mnemonicParsing="false" onAction="#onStop" text="Stop" GridPane.columnIndex="2" GridPane.rowIndex="5" />
       <Label fx:id="prev" GridPane.rowIndex="2" />
       <Button fx:id="changePrev" mnemonicParsing="false" onAction="#onChangePrev" text="Set Previous Hotkey" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Button fx:id="mediaPrev" mnemonicParsing="false" onAction="#onMediaPrev" text="Set Previous to Media Key" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeat" text="No Repeat" GridPane.rowIndex="5" />
-      <Button fx:id="toggleRequests" mnemonicParsing="false" onAction="#onToggleRequests" text="Toggle Requests" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <Button fx:id="modeChange" mnemonicParsing="false" onAction="#onChangeTheme" text="Dark Mode" GridPane.columnIndex="2" GridPane.rowIndex="6" />
       <Slider fx:id="volume" majorTickUnit="10.0" minorTickCount="1" onKeyPressed="#onSliderChange" onMouseReleased="#onSliderChange" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
    </children>
 </GridPane>

@@ -1,0 +1,51 @@
+.button, .text-field, .table-row-cell, .table-view {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+    -fx-border-color: #474c63;
+}
+
+.slider .track {
+    -fx-background-color: #88dbfd;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #88dbfd;
+    -fx-border-color: #474c63;
+}
+
+.table-column {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+    -fx-border-width: none;
+}
+
+.scroll-bar .decrement-button, .scroll-bar .increment-button, .scroll-bar .thumb {
+    -fx-background-color: #1b2240;
+    -fx-border-color: #474c63;
+}
+
+.table-row-cell .table-cell {
+    -fx-background-color: inherit;
+    -fx-text-fill: inherit;
+}
+
+.label {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+}
+
+.table-view .column-header-background, .table-view .column-header-background .filler {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+    -fx-font-size: 20px;
+    -fx-border-color: #474c63;
+}
+
+.button:hover, .table-row-cell:hover {
+     -fx-background-color: #383f56;
+     -fx-border-color: #474c63;
+ }
+
+.root {
+    -fx-background-color: #1b2240;
+}
