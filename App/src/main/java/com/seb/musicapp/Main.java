@@ -40,11 +40,11 @@ public class Main extends Application {
     /**
      * Scene for connector and main window
      */
-    public Scene scene;
+    public Scene scene, streamerscene;
     /**
      * Stage for the queue window
      */
-    public Stage queueStage;
+    public Stage queueStage, streamerStage;
     /**
      * Controller for the queue window
      */
@@ -54,6 +54,7 @@ public class Main extends Application {
      */
     public MainWindowController mainWindowController;
     private ConnectController connectController;
+    private StreamerController streamerController;
     /**
      * the discord activity
      */
@@ -83,7 +84,11 @@ public class Main extends Application {
         connectController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
         queueScene = new Scene(fxmlLoader.load(), 320, 800);
+        stage.setScene(queueScene);
         queueController = fxmlLoader.getController();
+        fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
+        streamerscene = new Scene(fxmlLoader.load(), 320, 800);
+        streamerController = fxmlLoader.getController();
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
         stage.setTitle("Connect");
@@ -129,8 +134,6 @@ public class Main extends Application {
             mainWindowController.init();
             queueStage = new Stage();
             queueStage.setTitle("Queue");
-            queueScene.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
-            queueStage.setTitle("Queue");
             queueStage.setScene(queueScene);
             queueStage.setOnCloseRequest(event -> {
                 event.consume();
@@ -139,6 +142,14 @@ public class Main extends Application {
             queueController.setApp(this);
             queueController.addPropertyChangeListener(mainWindowController);
             new Thread(() -> queueController.setItems()).start();
+            streamerStage = new Stage();
+            streamerStage.setTitle("Streamer Stuff");
+            streamerStage.setScene(streamerscene);
+            streamerStage.setOnCloseRequest(event -> {
+                event.consume();
+                streamerStage.hide();
+            });
+            streamerController.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,11 +224,13 @@ public class Main extends Application {
             theme = "light";
             scene.getStylesheets().remove(cssDark);
             queueScene.getStylesheets().remove(cssDark);
+            streamerscene.getStylesheets().remove(cssDark);
             this.theme = Theme.Light;
         }
         else if (theme.equals("dark")) {
             scene.getStylesheets().add(cssDark);
             queueScene.getStylesheets().add(cssDark);
+            streamerscene.getStylesheets().add(cssDark);
             this.theme = Theme.Dark;
         }
         Writer.write(theme, new File("theme"));

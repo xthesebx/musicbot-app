@@ -10,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,11 +145,6 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 onPlay();
             }
         });
-        /*twitchname.setOnKeyPressed(e -> {
-            if (e.getCode().getCode() == 10) {
-                onSetStreamerMode();
-            }
-        });*/
 
         if (application.theme == Theme.Dark) Platform.runLater(() -> {
             modeChange.setText("Light Mode");
@@ -355,8 +348,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onStreamerStuff() {
-        /*application.connector.out.println("streamer " + twitchname.getText());
-        twitchname.setText("");*/
+        if (application.streamerStage.isShowing()) application.streamerStage.toFront();
+        else application.streamerStage.show();
     }
     /**
      * <p>onPlay.</p>
