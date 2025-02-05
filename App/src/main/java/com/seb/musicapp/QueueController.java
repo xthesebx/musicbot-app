@@ -39,7 +39,7 @@ public class QueueController {
     Main application;
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     private RepeatState repeatState = RepeatState.NO_REPEAT;
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
      * <p>Constructor for QueueController.</p>
@@ -125,7 +125,7 @@ public class QueueController {
 
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                    if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
                     }
@@ -191,13 +191,13 @@ public class QueueController {
         if (data.has("next")) {
             if (!queue.isEmpty()) {
                 for (int i = 0; i < data.getInt("next"); i++) {
-                    String dur = queue.get(0).getDuration();
+                    String dur = queue.getFirst().getDuration();
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
-                    String songName = queue.get(0).getSongName();
-                    application.discordActivity.set(queue.get(0).getSongName(), queue.get(0).getArtist(), seconds, queue.get(0).getUrl(), true);
+                    String songName = queue.getFirst().getSongName();
+                    application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), seconds, queue.getFirst().getUrl(), true);
                     Platform.runLater(() -> application.stage.setTitle(songName));
-                    queue.remove(0);
+                    queue.removeFirst();
                 }
             } else {
                 application.discordActivity.setIdlePresence();
@@ -215,9 +215,7 @@ public class QueueController {
         }
         if (data.has("volume")) {
             int vol = data.getInt("volume");
-            Platform.runLater(() -> {
-                application.mainWindowController.setVolume(vol);
-            });
+            Platform.runLater(() -> application.mainWindowController.setVolume(vol));
         }
         queueTable.refresh();
         data.clear();
