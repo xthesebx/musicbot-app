@@ -121,7 +121,7 @@ public class Main extends Application {
         try {
             connector.connect(id);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e);
             return;
         }
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
@@ -151,7 +151,7 @@ public class Main extends Application {
             });
             streamerController.initialize(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
     }
 
@@ -171,7 +171,7 @@ public class Main extends Application {
                 connectController.setApplication(this);
                 queueStage.close();
             } catch (IOException e) {
-
+                Logger.error(e);
             }
         });
     }
