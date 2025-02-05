@@ -173,6 +173,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onChangePlay() {
         changePlay.setDisable(true);
+        changePrev.setDisable(false);
+        changeSkip.setDisable(false);
         application.scene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
                 KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getCode().getCode(), 0);
@@ -198,6 +200,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onChangeSkip() {
+        changePlay.setDisable(true);
+        changePrev.setDisable(false);
         changeSkip.setDisable(true);
         application.scene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
@@ -224,6 +228,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onChangePrev() {
+        changePlay.setDisable(true);
+        changeSkip.setDisable(false);
         changePrev.setDisable(true);
         application.scene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
