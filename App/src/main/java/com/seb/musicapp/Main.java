@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -184,7 +185,7 @@ public class Main extends Application {
         } catch (NullPointerException e) {
             f = 0.0f;
         }
-        URL url = new URL("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest");
+        URL url = URI.create("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest").toURL();
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -204,7 +205,7 @@ public class Main extends Application {
                 if (((JSONObject) asset).getString("name").equals("musicapp.exe"))
                     downloadlink.set(((JSONObject) asset).getString("browser_download_url"));
             });
-            try (BufferedInputStream bis = new BufferedInputStream(new URL(downloadlink.get()).openStream());
+            try (BufferedInputStream bis = new BufferedInputStream(URI.create(downloadlink.get()).toURL().openStream());
                  FileOutputStream fos = new FileOutputStream("musicapp.exe")) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
