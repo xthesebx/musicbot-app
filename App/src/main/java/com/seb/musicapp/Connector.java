@@ -52,7 +52,7 @@ public class Connector {
         out.println(id.strip());
         String s = in.readLine();
         if (s.equals("no")) {
-            throw new IOException();
+            throw new WrongCodeException("Wrong code");
         }
         new Thread(new ConnectionListener(this, application)).start();
     }

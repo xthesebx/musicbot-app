@@ -2,9 +2,13 @@ package com.seb.musicapp;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
+
+import java.io.IOException;
 
 /**
  * <p>ConnectController class.</p>
@@ -20,12 +24,21 @@ public class ConnectController {
     private HBox outerBox;
     @FXML
     private Button minimize, maximize, quit;
+    @FXML
+    private Label error;
     /**
      * <p>onHelloButtonClick.</p>
      */
     @FXML
     protected void onHelloButtonClick() {
-        application.connect(ID.getText());
+        try {
+            application.connect(ID.getText());
+        } catch (IOException e) {
+            if (e instanceof WrongCodeException) {
+                error.setVisible(true);
+                error.setTextFill(Paint.valueOf("#ff0000"));
+            }
+        }
     }
 
     /**
@@ -39,7 +52,15 @@ public class ConnectController {
                 } catch (InterruptedException e) {}
             }
             ID.setOnKeyPressed(e -> {
-                if (e.getCode().equals(KeyCode.ENTER)) application.connect(ID.getText());
+                if (e.getCode().equals(KeyCode.ENTER))
+                    try {
+                        application.connect(ID.getText());
+                    } catch (IOException ex) {
+                        if (ex instanceof WrongCodeException) {
+                            error.setVisible(true);
+                            error.setTextFill(Paint.valueOf("#ff0000"));
+                        }
+                    }
             });
             StreamerController.dragHandler(outerBox);
         }).start();

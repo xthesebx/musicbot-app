@@ -11,6 +11,10 @@
     -fx-border-style: hidden hidden hidden solid;
 }
 
+.error {
+    -fx-text-fill: #ff0000;
+}
+
 .slider .track {
     -fx-background-color: #88dbfd;
 }

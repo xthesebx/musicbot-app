@@ -86,7 +86,7 @@ public class Main extends Application {
     public void initialise() throws IOException {
         this.connector = new Connector(this);
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
-        scene = new Scene(fxmlLoader.load(), 400, 200);
+        scene = new Scene(fxmlLoader.load(), 400, 300);
         connectController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
         queueScene = new Scene(fxmlLoader.load(), 320, 800);
@@ -123,13 +123,8 @@ public class Main extends Application {
      *
      * @param id a {@link java.lang.String} object
      */
-    public void connect(String id) {
-        try {
-            connector.connect(id);
-        } catch (IOException e) {
-            Logger.error(e);
-            return;
-        }
+    public void connect(String id) throws IOException {
+        connector.connect(id);
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
         try {
             scene.setRoot(fxmlLoader.load());
