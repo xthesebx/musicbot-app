@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -333,7 +332,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onQueue() {
-        if (application.queueStage.isShowing()) application.queueStage.toFront();
+        if (application.queueStage.isShowing()) {
+            application.queueStage.toFront();
+            if (application.queueStage.isIconified())
+                application.queueStage.setIconified(false);
+        }
         else application.queueStage.show();
     }
     /**
@@ -348,7 +351,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onStreamerStuff() {
-        if (application.streamerStage.isShowing()) application.streamerStage.toFront();
+        if (application.streamerStage.isShowing()) {
+            application.streamerStage.toFront();
+            if (application.streamerStage.isIconified())
+                application.streamerStage.setIconified(false);
+        }
         else application.streamerStage.show();
     }
     /**
