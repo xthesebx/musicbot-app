@@ -1,6 +1,5 @@
 package com.seb.musicapp;
 
-import com.hawolt.logger.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

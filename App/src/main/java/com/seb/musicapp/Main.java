@@ -124,7 +124,6 @@ public class Main extends Application {
             return;
         }
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         try {
             scene.setRoot(fxmlLoader.load());
             mainWindowController = fxmlLoader.getController();
