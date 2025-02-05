@@ -145,12 +145,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             }
         });
 
-        if (application.theme == Theme.Dark) Platform.runLater(() -> {
-            modeChange.setText("Light Mode");
-        });
-        else if (application.theme == Theme.Light) Platform.runLater(() -> {
-            modeChange.setText("Dark Mode");
-        });
+        if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
+        else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
     }
 
     /**
