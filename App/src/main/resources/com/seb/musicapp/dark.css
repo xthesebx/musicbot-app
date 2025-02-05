@@ -1,7 +1,14 @@
-.button, .text-field, .table-row-cell, .table-view {
+.button, .text-field, .table-row-cell, .table-view, .hbox {
     -fx-background-color: #1b2240;
     -fx-text-fill: #88dbfd;
     -fx-border-color: #474c63;
+}
+
+.headerButton {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+    -fx-border-color: #474c63;
+    -fx-border-style: hidden hidden hidden solid;
 }
 
 .slider .track {

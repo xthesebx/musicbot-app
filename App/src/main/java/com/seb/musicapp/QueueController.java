@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +37,8 @@ public class QueueController {
     TableColumn<Song, String> queueArtist;
     @FXML
     TableColumn<Song, String> queueLength;
+    @FXML
+    private HBox outerBox;
     Main application;
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     private RepeatState repeatState = RepeatState.NO_REPEAT;
@@ -55,6 +58,8 @@ public class QueueController {
      */
     public void setApp(Main application) {
         this.application = application;
+
+        StreamerController.dragHandler(outerBox);
     }
 
     /**
@@ -196,12 +201,12 @@ public class QueueController {
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
                     String songName = queue.getFirst().getSongName();
                     application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), seconds, queue.getFirst().getUrl(), true);
-                    Platform.runLater(() -> application.stage.setTitle(songName));
+                    Platform.runLater(() -> application.mainWindowController.getTitle().setText(songName));
                     queue.removeFirst();
                 }
             } else {
                 application.discordActivity.setIdlePresence();
-                Platform.runLater(() -> application.stage.setTitle("Music Bot App"));
+                Platform.runLater(() -> application.mainWindowController.getTitle().setText("Music Bot App"));
             }
         }
         queueTable.setItems(FXCollections.observableArrayList(queue));
@@ -227,5 +232,20 @@ public class QueueController {
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @FXML
+    private void onQuitButtonClick() {
+        System.exit(0);
+    }
+
+    @FXML
+    private void onMinimizeButtonClick() {
+        application.stage.setIconified(true);
+    }
+
+    @FXML
+    private void onMaximizeButtonClick() {
+        application.stage.setMaximized(!application.stage.isMaximized());
     }
 }

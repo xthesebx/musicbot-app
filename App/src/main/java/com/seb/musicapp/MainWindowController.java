@@ -1,5 +1,6 @@
 package com.seb.musicapp;
 
+import com.hawolt.logger.Logger;
 import com.tulskiy.keymaster.common.HotKey;
 import com.tulskiy.keymaster.common.HotKeyListener;
 import com.tulskiy.keymaster.common.MediaKey;
@@ -10,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +39,14 @@ import java.util.List;
  */
 public class MainWindowController implements HotKeyListener, PropertyChangeListener {
 
+    public Label getTitle() {
+        return title;
+    }
+
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private Label title;
     @FXML
     private GridPane gridPane;
     @FXML
@@ -78,6 +89,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     private Button changePrev;
     @FXML
     private Button mediaPrev;
+    @FXML
+    private HBox outerBox;
     private Main application;
     private final Provider provider = Provider.getCurrentProvider(false);
     private final HashMap<String, String> buttons = new HashMap<>();
@@ -106,7 +119,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             if (prevString.isEmpty()) prevString = "MEDIA_PREV_TRACK";
         } catch (IOException | JSONException e) {
             if (!(e instanceof NoSuchFileException))
-                System.err.println(e);
+                Logger.error(e);
         }
 
         if (!play.equals("MEDIA_PLAY_PAUSE") && !play.isEmpty()){
@@ -147,6 +160,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
 
         if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
         else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
+        StreamerController.dragHandler(outerBox);
     }
 
     /**
@@ -448,5 +462,20 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     public void setVolume(int vol) {
         volume.setValue(vol);
+    }
+
+    @FXML
+    private void onQuitButtonClick() {
+        System.exit(0);
+    }
+
+    @FXML
+    private void onMinimizeButtonClick() {
+        application.stage.setIconified(true);
+    }
+
+    @FXML
+    private void onMaximizeButtonClick() {
+        application.stage.setMaximized(!application.stage.isMaximized());
     }
 }

@@ -1,8 +1,10 @@
 package com.seb.musicapp;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 
 /**
  * <p>ConnectController class.</p>
@@ -14,7 +16,10 @@ public class ConnectController {
     @FXML
     private TextField ID;
     private Main application;
-
+    @FXML
+    private HBox outerBox;
+    @FXML
+    private Button minimize, maximize, quit;
     /**
      * <p>onHelloButtonClick.</p>
      */
@@ -36,7 +41,23 @@ public class ConnectController {
             ID.setOnKeyPressed(e -> {
                 if (e.getCode().equals(KeyCode.ENTER)) application.connect(ID.getText());
             });
+            StreamerController.dragHandler(outerBox);
         }).start();
+    }
+
+    @FXML
+    private void onQuitButtonClick() {
+        System.exit(0);
+    }
+
+    @FXML
+    private void onMinimizeButtonClick() {
+        application.stage.setIconified(true);
+    }
+
+    @FXML
+    private void onMaximizeButtonClick() {
+        application.stage.setMaximized(!application.stage.isMaximized());
     }
 
     /**

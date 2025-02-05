@@ -6,11 +6,16 @@ import com.seb.io.Reader;
 import com.seb.io.Writer;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -85,14 +90,15 @@ public class Main extends Application {
         connectController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Queue.fxml"));
         queueScene = new Scene(fxmlLoader.load(), 320, 800);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(queueScene);
+        stage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
         queueController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
-        streamerscene = new Scene(fxmlLoader.load(), 320, 800);
+        streamerscene = new Scene(fxmlLoader.load(), 320, 180);
         streamerController = fxmlLoader.getController();
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
-        stage.setTitle("Connect");
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(_ -> System.exit(0));
@@ -127,14 +133,18 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
         try {
             scene.setRoot(fxmlLoader.load());
+            stage.setWidth(600);
+            stage.setHeight(440);
             mainWindowController = fxmlLoader.getController();
             mainWindowController.setApplication(this);
-            stage.setTitle("Music Bot App");
             stage.setScene(scene);
             mainWindowController.init();
             queueStage = new Stage();
-            queueStage.setTitle("Queue");
+            queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(queueStage));
+            queueStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
+            queueStage.initStyle(StageStyle.UNDECORATED);
             queueStage.setScene(queueScene);
+            queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(stage));
             queueStage.setOnCloseRequest(event -> {
                 event.consume();
                 queueStage.hide();
@@ -143,8 +153,10 @@ public class Main extends Application {
             queueController.addPropertyChangeListener(mainWindowController);
             new Thread(() -> queueController.setItems()).start();
             streamerStage = new Stage();
-            streamerStage.setTitle("Streamer Stuff");
+            streamerStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
+            streamerStage.initStyle(StageStyle.UNDECORATED);
             streamerStage.setScene(streamerscene);
+            streamerscene.addEventFilter(MouseEvent.ANY, new ResizeHandler(streamerStage));
             streamerStage.setOnCloseRequest(event -> {
                 event.consume();
                 streamerStage.hide();
@@ -164,7 +176,6 @@ public class Main extends Application {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
                 scene.setRoot(fxmlLoader.load());
-                stage.setTitle("Connect");
                 stage.setScene(scene);
                 stage.show();
                 connectController = fxmlLoader.getController();
@@ -234,5 +245,167 @@ public class Main extends Application {
             this.theme = Theme.Dark;
         }
         Writer.write(theme, new File("theme"));
+    }
+
+    /**
+     * Handler to process the resizing of the the given stage.
+     */
+    class ResizeHandler implements EventHandler<MouseEvent> {
+
+        /**
+         * Space to consider around the stage border for resizing
+         */
+        private static final double BORDER = 6;
+
+        /**
+         * Space to consider the border width factor while resizing
+         */
+        private static final double BORDER_WIDTH_FACTOR = 6;
+
+        private final Window window;
+        /**
+         * Current cursor reference to the scene
+         */
+        private Cursor cursor = Cursor.DEFAULT;
+
+        /**
+         * X position of the drag start
+         */
+        private double startX = 0;
+
+        /**
+         * Y position of the drag start
+         */
+        private double startY = 0;
+
+        ResizeHandler(final Window window) {
+            this.window = window;
+        }
+
+        @Override
+        public void handle(final MouseEvent event) {
+            final EventType<? extends MouseEvent> eventType = event.getEventType();
+            final Scene scene = window.getScene();
+            final double mouseEventX = event.getSceneX();
+            final double mouseEventY = event.getSceneY();
+            final double sceneWidth = scene.getWidth();
+            final double sceneHeight = scene.getHeight();
+            final boolean isResizable = true;
+
+            if (isResizable) {
+                if (MouseEvent.MOUSE_MOVED.equals(eventType)) {
+                    assignCursor(scene, event, mouseEventX, mouseEventY, sceneWidth, sceneHeight);
+
+                } else if (MouseEvent.MOUSE_PRESSED.equals(eventType)) {
+                    startX = window.getWidth() - mouseEventX;
+                    startY = window.getHeight() - mouseEventY;
+                    consumeEventIfNotDefaultCursor(event);
+
+                } else if (MouseEvent.MOUSE_DRAGGED.equals(eventType) && !Cursor.DEFAULT.equals(cursor)) {
+                    consumeEventIfNotDefaultCursor(event);
+                    if (!Cursor.W_RESIZE.equals(cursor) && !Cursor.E_RESIZE.equals(cursor)) {
+                        handleHeightResize(event);
+                    }
+
+                    if (!Cursor.N_RESIZE.equals(cursor) && !Cursor.S_RESIZE.equals(cursor)) {
+                        handleWidthResize(event);
+                    }
+                }
+            }
+        }
+
+        private void assignCursor(final Scene scene, final MouseEvent event, final double mouseEventX,
+                                  final double mouseEventY, final double sceneWidth, final double sceneHeight) {
+            final Cursor cursor1;
+
+            if (mouseEventX < BORDER && mouseEventY < BORDER) {
+                cursor1 = Cursor.NW_RESIZE;
+            } else if (mouseEventX < BORDER && mouseEventY > sceneHeight - BORDER) {
+                cursor1 = Cursor.SW_RESIZE;
+            } else if (mouseEventX > sceneWidth - BORDER
+                    && mouseEventY < BORDER) {
+                cursor1 = Cursor.NE_RESIZE;
+            } else if (mouseEventX > sceneWidth - BORDER && mouseEventY > sceneHeight - BORDER) {
+                cursor1 = Cursor.SE_RESIZE;
+            } else if (mouseEventX < BORDER) {
+                cursor1 = Cursor.W_RESIZE;
+            } else if (mouseEventX > sceneWidth - BORDER) {
+                cursor1 = Cursor.E_RESIZE;
+            } else if (mouseEventY < BORDER) {
+                cursor1 = Cursor.N_RESIZE;
+            } else if (mouseEventY > sceneHeight - BORDER) {
+                cursor1 = Cursor.S_RESIZE;
+            } else {
+                cursor1 = Cursor.DEFAULT;
+            }
+            cursor = cursor1;
+            scene.setCursor(cursor);
+        }
+
+/**
+ * Consumes the mouse event if the cursor is not the DEFAULT cursor.
+ *
+ * @param event MouseEvent instance
+ */
+private void consumeEventIfNotDefaultCursor(final MouseEvent event) {
+    if (!cursor.equals(Cursor.DEFAULT)) {
+        event.consume();
+    }
+}
+
+        /**
+         * Processes the vertical drag movement and resizes the window height.
+         *
+         * @param event MouseEvent instance
+         */
+        private void handleHeightResize(final MouseEvent event) {
+            final double mouseEventY = event.getSceneY();
+            final double minHeight = 30;
+            if (Cursor.NW_RESIZE.equals(cursor)
+                    || Cursor.N_RESIZE.equals(cursor)
+                    || Cursor.NE_RESIZE.equals(cursor)) {
+                if (window.getHeight() > minHeight || mouseEventY < 0) {
+                    final double newHeight = window.getY() - event.getScreenY() + window.getHeight();
+                    window.setHeight(max(newHeight, minHeight));
+                    window.setY(event.getScreenY());
+                }
+            } else if (window.getHeight() > minHeight || mouseEventY + startY - window.getHeight() > 0) {
+                final double newHeight = mouseEventY + startY;
+                window.setHeight(max(newHeight, minHeight));
+            }
+        }
+
+        /**
+         * Processes the horizontal drag movement and resizes the window width.
+         *
+         * @param event MouseEvent instance
+         */
+        private void handleWidthResize(final MouseEvent event) {
+            final double mouseEventX = event.getSceneX();
+            final double minWidth = 100;
+            if (Cursor.NW_RESIZE.equals(cursor)
+                    || Cursor.W_RESIZE.equals(cursor)
+                    || Cursor.SW_RESIZE.equals(cursor)) {
+                if (window.getWidth() > minWidth || mouseEventX < 0) {
+                    final double newWidth = window.getX() - event.getScreenX() + window.getWidth();
+                    window.setWidth(max(newWidth, minWidth));
+                    window.setX(event.getScreenX());
+                }
+            } else if (window.getWidth() > minWidth || mouseEventX + startX - window.getWidth() > 0) {
+                final double newWidth = mouseEventX + startX;
+                window.setWidth(max(newWidth, minWidth));
+            }
+        }
+
+        /**
+         * Determines the max value among the provided two values.
+         *
+         * @param value1 First value
+         * @param value2 Second value
+         * @return Maximum value of the given two values.
+         */
+        private double max(final double value1, final double value2) {
+            return value1 > value2 ? value1 : value2;
+        }
     }
 }
