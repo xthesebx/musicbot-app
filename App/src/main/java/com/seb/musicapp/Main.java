@@ -247,7 +247,7 @@ public class Main extends Application {
     /**
      * Handler to process the resizing of the the given stage.
      */
-    class ResizeHandler implements EventHandler<MouseEvent> {
+    static class ResizeHandler implements EventHandler<MouseEvent> {
 
         /**
          * Space to consider around the stage border for resizing
@@ -287,26 +287,23 @@ public class Main extends Application {
             final double mouseEventY = event.getSceneY();
             final double sceneWidth = scene.getWidth();
             final double sceneHeight = scene.getHeight();
-            final boolean isResizable = true;
 
-            if (isResizable) {
-                if (MouseEvent.MOUSE_MOVED.equals(eventType)) {
-                    assignCursor(scene, event, mouseEventX, mouseEventY, sceneWidth, sceneHeight);
+            if (MouseEvent.MOUSE_MOVED.equals(eventType)) {
+                assignCursor(scene, event, mouseEventX, mouseEventY, sceneWidth, sceneHeight);
 
-                } else if (MouseEvent.MOUSE_PRESSED.equals(eventType)) {
-                    startX = window.getWidth() - mouseEventX;
-                    startY = window.getHeight() - mouseEventY;
-                    consumeEventIfNotDefaultCursor(event);
+            } else if (MouseEvent.MOUSE_PRESSED.equals(eventType)) {
+                startX = window.getWidth() - mouseEventX;
+                startY = window.getHeight() - mouseEventY;
+                consumeEventIfNotDefaultCursor(event);
 
-                } else if (MouseEvent.MOUSE_DRAGGED.equals(eventType) && !Cursor.DEFAULT.equals(cursor)) {
-                    consumeEventIfNotDefaultCursor(event);
-                    if (!Cursor.W_RESIZE.equals(cursor) && !Cursor.E_RESIZE.equals(cursor)) {
-                        handleHeightResize(event);
-                    }
+            } else if (MouseEvent.MOUSE_DRAGGED.equals(eventType) && !Cursor.DEFAULT.equals(cursor)) {
+                consumeEventIfNotDefaultCursor(event);
+                if (!Cursor.W_RESIZE.equals(cursor) && !Cursor.E_RESIZE.equals(cursor)) {
+                    handleHeightResize(event);
+                }
 
-                    if (!Cursor.N_RESIZE.equals(cursor) && !Cursor.S_RESIZE.equals(cursor)) {
-                        handleWidthResize(event);
-                    }
+                if (!Cursor.N_RESIZE.equals(cursor) && !Cursor.S_RESIZE.equals(cursor)) {
+                    handleWidthResize(event);
                 }
             }
         }
@@ -402,7 +399,7 @@ private void consumeEventIfNotDefaultCursor(final MouseEvent event) {
          * @return Maximum value of the given two values.
          */
         private double max(final double value1, final double value2) {
-            return value1 > value2 ? value1 : value2;
+            return Math.max(value1, value2);
         }
     }
 }
