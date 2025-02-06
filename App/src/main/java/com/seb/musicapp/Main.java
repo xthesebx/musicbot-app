@@ -139,7 +139,6 @@ public class Main extends Application {
             queueStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
             queueStage.initStyle(StageStyle.UNDECORATED);
             queueStage.setScene(queueScene);
-            queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(stage));
             queueStage.setOnCloseRequest(event -> {
                 event.consume();
                 queueStage.hide();
