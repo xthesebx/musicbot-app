@@ -226,6 +226,15 @@ public class QueueController {
         data.clear();
     }
 
+    public void clearQueue() {
+        queue.clear();
+        application.discordActivity.setIdlePresence();
+        Platform.runLater(() -> application.mainWindowController.getTitle().setText("Music Bot App"));
+        queueTable.setItems(FXCollections.observableArrayList(queue));
+        queueTable.refresh();
+
+    }
+
     /**
      * <p>addPropertyChangeListener.</p>
      *

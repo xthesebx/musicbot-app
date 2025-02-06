@@ -176,6 +176,8 @@ public class Main extends Application {
                 connectController = fxmlLoader.getController();
                 connectController.setApplication(this);
                 queueStage.close();
+                streamerStage.close();
+                queueController.clearQueue();
             } catch (IOException e) {
                 Logger.error(e);
             }
