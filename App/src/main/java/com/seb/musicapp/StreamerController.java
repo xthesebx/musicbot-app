@@ -56,7 +56,7 @@ public class StreamerController {
 
     @FXML
     private void onQuitButtonClick() {
-        System.exit(0);
+        application.streamerStage.close();
     }
 
     @FXML

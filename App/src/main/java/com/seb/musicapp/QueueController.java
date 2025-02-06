@@ -245,7 +245,7 @@ public class QueueController {
 
     @FXML
     private void onQuitButtonClick() {
-        System.exit(0);
+        application.queueStage.close();
     }
 
     @FXML
