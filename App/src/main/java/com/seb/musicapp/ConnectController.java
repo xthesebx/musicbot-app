@@ -68,7 +68,7 @@ public class ConnectController {
 
     @FXML
     private void onQuitButtonClick() {
-        System.exit(0);
+        application.exitController.open(false);
     }
 
     @FXML

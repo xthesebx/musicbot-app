@@ -61,6 +61,9 @@ public class Main extends Application {
     public MainWindowController mainWindowController;
     private ConnectController connectController;
     private StreamerController streamerController;
+    public Stage exitStage;
+    public ExitController exitController;
+    private Scene exitScene;
     /**
      * the discord activity
      */
@@ -97,6 +100,13 @@ public class Main extends Application {
         fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
         streamerscene = new Scene(fxmlLoader.load(), 320, 180);
         streamerController = fxmlLoader.getController();
+        exitStage = new Stage();
+        fxmlLoader = new FXMLLoader(Main.class.getResource("Exit.fxml"));
+        exitScene = new Scene(fxmlLoader.load(), 320, 180);
+        exitStage.setScene(exitScene);
+        exitStage.initStyle(StageStyle.UNDECORATED);
+        exitController = fxmlLoader.getController();
+        exitController.init(this);
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
         stage.setScene(scene);
@@ -232,12 +242,14 @@ public class Main extends Application {
             scene.getStylesheets().remove(cssDark);
             queueScene.getStylesheets().remove(cssDark);
             streamerscene.getStylesheets().remove(cssDark);
+            exitScene.getStylesheets().remove(cssDark);
             this.theme = Theme.Light;
         }
         else if (theme.equals("dark")) {
             scene.getStylesheets().add(cssDark);
             queueScene.getStylesheets().add(cssDark);
             streamerscene.getStylesheets().add(cssDark);
+            exitScene.getStylesheets().add(cssDark);
             this.theme = Theme.Dark;
         }
         Writer.write(theme, new File("theme"));

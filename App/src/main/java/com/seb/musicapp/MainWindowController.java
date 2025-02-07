@@ -466,7 +466,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
 
     @FXML
     private void onQuitButtonClick() {
-        System.exit(0);
+        application.exitController.open(true);
     }
 
     @FXML
