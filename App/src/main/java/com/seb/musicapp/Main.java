@@ -64,6 +64,7 @@ public class Main extends Application {
     public Stage exitStage;
     public ExitController exitController;
     private Scene exitScene;
+    private Scene mainScene;
     /**
      * the discord activity
      */
@@ -107,6 +108,33 @@ public class Main extends Application {
         exitStage.initStyle(StageStyle.UNDECORATED);
         exitController = fxmlLoader.getController();
         exitController.init(this);
+        fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
+        mainScene = new Scene(fxmlLoader.load(),600, 440);
+        mainWindowController = fxmlLoader.getController();
+        mainWindowController.setApplication(this);
+        mainWindowController.init();
+        queueStage = new Stage();
+        queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(queueStage));
+        queueStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
+        queueStage.initStyle(StageStyle.UNDECORATED);
+        queueStage.setScene(queueScene);
+        queueStage.setOnCloseRequest(event -> {
+            event.consume();
+            queueStage.hide();
+        });
+        queueController.setApp(this);
+        queueController.addPropertyChangeListener(mainWindowController);
+        new Thread(() -> queueController.setItems()).start();
+        streamerStage = new Stage();
+        streamerStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
+        streamerStage.initStyle(StageStyle.UNDECORATED);
+        streamerStage.setScene(streamerscene);
+        streamerscene.addEventFilter(MouseEvent.ANY, new ResizeHandler(streamerStage));
+        streamerStage.setOnCloseRequest(event -> {
+            event.consume();
+            streamerStage.hide();
+        });
+        streamerController.initialize(this);
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
         stage.setScene(scene);
@@ -135,40 +163,9 @@ public class Main extends Application {
      */
     public void connect(String id) throws IOException {
         connector.connect(id);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
-        try {
-            scene.setRoot(fxmlLoader.load());
-            stage.setWidth(600);
-            stage.setHeight(440);
-            mainWindowController = fxmlLoader.getController();
-            mainWindowController.setApplication(this);
-            stage.setScene(scene);
-            mainWindowController.init();
-            queueStage = new Stage();
-            queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(queueStage));
-            queueStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
-            queueStage.initStyle(StageStyle.UNDECORATED);
-            queueStage.setScene(queueScene);
-            queueStage.setOnCloseRequest(event -> {
-                event.consume();
-                queueStage.hide();
-            });
-            queueController.setApp(this);
-            queueController.addPropertyChangeListener(mainWindowController);
-            new Thread(() -> queueController.setItems()).start();
-            streamerStage = new Stage();
-            streamerStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
-            streamerStage.initStyle(StageStyle.UNDECORATED);
-            streamerStage.setScene(streamerscene);
-            streamerscene.addEventFilter(MouseEvent.ANY, new ResizeHandler(streamerStage));
-            streamerStage.setOnCloseRequest(event -> {
-                event.consume();
-                streamerStage.hide();
-            });
-            streamerController.initialize(this);
-        } catch (IOException e) {
-            Logger.error(e);
-        }
+        stage.setWidth(600);
+        stage.setHeight(440);
+        stage.setScene(mainScene);
     }
 
     /**
@@ -176,11 +173,14 @@ public class Main extends Application {
      */
     public void reset() {
         mainWindowController.getProvider().reset();
+        discordActivity.setIdlePresence();
         Platform.runLater(() -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
                 scene.setRoot(fxmlLoader.load());
                 stage.setScene(scene);
+                stage.setWidth(400);
+                stage.setHeight(300);
                 stage.show();
                 connectController = fxmlLoader.getController();
                 connectController.setApplication(this);
@@ -243,6 +243,7 @@ public class Main extends Application {
             queueScene.getStylesheets().remove(cssDark);
             streamerscene.getStylesheets().remove(cssDark);
             exitScene.getStylesheets().remove(cssDark);
+            mainScene.getStylesheets().remove(cssDark);
             this.theme = Theme.Light;
         }
         else if (theme.equals("dark")) {
@@ -250,6 +251,7 @@ public class Main extends Application {
             queueScene.getStylesheets().add(cssDark);
             streamerscene.getStylesheets().add(cssDark);
             exitScene.getStylesheets().add(cssDark);
+            mainScene.getStylesheets().add(cssDark);
             this.theme = Theme.Dark;
         }
         Writer.write(theme, new File("theme"));

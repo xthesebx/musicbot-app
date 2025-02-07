@@ -43,6 +43,7 @@ public class ExitController {
 
     public void onDisconnect() {
         main.reset();
+        main.exitStage.close();
     }
 
     public void onExit() {
