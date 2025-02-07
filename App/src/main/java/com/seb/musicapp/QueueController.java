@@ -250,11 +250,11 @@ public class QueueController {
 
     @FXML
     private void onMinimizeButtonClick() {
-        application.stage.setIconified(true);
+        application.queueStage.setIconified(true);
     }
 
     @FXML
     private void onMaximizeButtonClick() {
-        application.stage.setMaximized(!application.stage.isMaximized());
+        application.queueStage.setMaximized(!application.queueStage.isMaximized());
     }
 }

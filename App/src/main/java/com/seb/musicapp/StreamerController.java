@@ -61,11 +61,11 @@ public class StreamerController {
 
     @FXML
     private void onMinimizeButtonClick() {
-        application.stage.setIconified(true);
+        application.streamerStage.setIconified(true);
     }
 
     @FXML
     private void onMaximizeButtonClick() {
-        application.stage.setMaximized(!application.stage.isMaximized());
+        application.streamerStage.setMaximized(!application.streamerStage.isMaximized());
     }
 }
