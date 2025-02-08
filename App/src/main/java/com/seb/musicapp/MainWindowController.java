@@ -107,6 +107,18 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      * <p>init.</p>
      */
     public void init() {
+        url.setOnKeyPressed(e -> {
+            if (e.getCode().getCode() == 10) {
+                onPlay();
+            }
+        });
+
+        if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
+        else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
+        StreamerController.dragHandler(outerBox);
+    }
+
+    public void setHotkeys() {
         String play = "", skip = "", prevString = "";
         file = new JSONObject();
         try {
@@ -121,7 +133,6 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             if (!(e instanceof NoSuchFileException))
                 Logger.error(e);
         }
-
         if (!play.equals("MEDIA_PLAY_PAUSE") && !play.isEmpty()){
             provider.register(KeyStroke.getKeyStroke(play), this);
             buttons.put("play", play);
@@ -151,16 +162,6 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             buttons.put("prev", prevString);
         }
         prev.setText(prevString);
-
-        url.setOnKeyPressed(e -> {
-            if (e.getCode().getCode() == 10) {
-                onPlay();
-            }
-        });
-
-        if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
-        else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
-        StreamerController.dragHandler(outerBox);
     }
 
     /**

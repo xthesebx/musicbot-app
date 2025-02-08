@@ -172,6 +172,7 @@ public class Main extends Application {
      */
     public void connect(String id) throws IOException {
         connector.connect(id);
+        mainWindowController.setHotkeys();
         stage.setTitle("Music Bot App");
         stage.setWidth(600);
         stage.setHeight(440);
