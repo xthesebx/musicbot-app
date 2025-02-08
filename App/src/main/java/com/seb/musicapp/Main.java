@@ -96,7 +96,14 @@ public class Main extends Application {
         queueScene = new Scene(fxmlLoader.load(), 320, 800);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(queueScene);
-        stage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
+        InputStream iconStream = Main.class.getResourceAsStream("icon.jpg");
+        if (iconStream != null) {
+            Image icon = new Image(iconStream);
+            stage.getIcons().add(icon);
+            queueStage.getIcons().add(icon);
+            streamerStage.getIcons().add(icon);
+            exitStage.getIcons().add(icon);
+        }
         queueController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
         streamerscene = new Scene(fxmlLoader.load(), 320, 180);
@@ -115,7 +122,6 @@ public class Main extends Application {
         mainWindowController.init();
         queueStage = new Stage();
         queueScene.addEventFilter(MouseEvent.ANY, new ResizeHandler(queueStage));
-        queueStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
         queueStage.initStyle(StageStyle.UNDECORATED);
         queueStage.setScene(queueScene);
         queueStage.setOnCloseRequest(event -> {
@@ -126,7 +132,6 @@ public class Main extends Application {
         queueController.addPropertyChangeListener(mainWindowController);
         new Thread(() -> queueController.setItems()).start();
         streamerStage = new Stage();
-        streamerStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.jpg")));
         streamerStage.initStyle(StageStyle.UNDECORATED);
         streamerStage.setScene(streamerscene);
         streamerscene.addEventFilter(MouseEvent.ANY, new ResizeHandler(streamerStage));
