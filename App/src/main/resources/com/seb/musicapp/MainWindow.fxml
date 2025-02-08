@@ -76,7 +76,7 @@
             <Button fx:id="mediaPrev" mnemonicParsing="false" onAction="#onMediaPrev" text="Set Previous to Media Key" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeat" text="No Repeat" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <Button fx:id="modeChange" mnemonicParsing="false" onAction="#onChangeTheme" text="Dark Mode" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-            <Slider fx:id="volume" majorTickUnit="10.0" minorTickCount="1" onKeyPressed="#onSliderChange" onMouseReleased="#onSliderChange" snapToTicks="true" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+            <Slider fx:id="volume" majorTickUnit="10.0" minorTickCount="1" onKeyPressed="#onSliderChange" onMouseReleased="#onSliderChange" GridPane.columnIndex="3" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>
