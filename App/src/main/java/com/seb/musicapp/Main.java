@@ -96,6 +96,7 @@ public class Main extends Application {
         queueScene = new Scene(fxmlLoader.load(), 320, 800);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(queueScene);
+        stage.setTitle("Connect");
         InputStream iconStream = Main.class.getResourceAsStream("icon.jpg");
         if (iconStream != null) {
             Image icon = new Image(iconStream);
@@ -113,6 +114,7 @@ public class Main extends Application {
         exitScene = new Scene(fxmlLoader.load(), 320, 180);
         exitStage.setScene(exitScene);
         exitStage.initStyle(StageStyle.UNDECORATED);
+        exitStage.setTitle("Exit");
         exitController = fxmlLoader.getController();
         exitController.init(this);
         fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
@@ -128,6 +130,7 @@ public class Main extends Application {
             event.consume();
             queueStage.hide();
         });
+        queueStage.setTitle("Queue");
         queueController.setApp(this);
         queueController.addPropertyChangeListener(mainWindowController);
         new Thread(() -> queueController.setItems()).start();
@@ -140,6 +143,7 @@ public class Main extends Application {
             streamerStage.hide();
         });
         streamerController.initialize(this);
+        streamerStage.setTitle("Streamer Stuff");
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
         stage.setScene(scene);
@@ -168,6 +172,7 @@ public class Main extends Application {
      */
     public void connect(String id) throws IOException {
         connector.connect(id);
+        stage.setTitle("Music Bot App");
         stage.setWidth(600);
         stage.setHeight(440);
         stage.setScene(mainScene);
@@ -183,6 +188,7 @@ public class Main extends Application {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
                 scene.setRoot(fxmlLoader.load());
+                stage.setTitle("Connect");
                 stage.setScene(scene);
                 stage.setWidth(400);
                 stage.setHeight(300);
