@@ -124,7 +124,7 @@ public class DiscordActivity implements Runnable {
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
         //TODO: add buttons as soon as they work i guess lol
         activity.assets().setLargeImage("musicbotlogo");
-        if (url != null) {
+        /*if (url != null) {
             if (button != null)
                 activity.removeButton(button);
             //System.out.println(url);
@@ -132,7 +132,7 @@ public class DiscordActivity implements Runnable {
             activity.addButton(button);
             activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
 
-        }
+        }*/
         activity.setType(ActivityType.LISTENING);
         activity.setDetails(details);
         activity.setState(state);
@@ -154,12 +154,14 @@ public class DiscordActivity implements Runnable {
      * @param url a {@link java.lang.String} object
      */
     public void addJoin(String url) {
-        if (join == null) join = new ActivityButton("Join Channel", url);
+        /*if (join == null) join = new ActivityButton("Join Channel", url);
         else  {
-            activity.removeButton(join);
+            //activity.removeButton(join);
             join.setUrl(url);
         }
-        activity.addButton(join);
-        activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
+        //activity.addButton(join);
+        //activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
+        */
     }
+
 }
