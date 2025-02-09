@@ -1,5 +1,6 @@
 package com.seb.musicapp;
 
+import com.hawolt.logger.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -68,6 +69,10 @@ public class ConnectController {
 
     @FXML
     private void onQuitButtonClick() {
+        int width = 320;
+        int height = 180;
+        application.exitStage.setX(application.stage.getX() + ((application.stage.getWidth() - width) / 2));
+        application.exitStage.setY(application.stage.getY() + ((application.stage.getHeight() - height) / 2));
         application.exitController.open(false);
     }
 

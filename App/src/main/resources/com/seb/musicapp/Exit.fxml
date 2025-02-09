@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seb.musicapp.ExitController">
+<VBox fx:id="vBox" styleClass="vBox" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seb.musicapp.ExitController">
    <children>
       <HBox fx:id="outerBox" alignment="CENTER" prefHeight="30.0" prefWidth="298.0" styleClass="hbox">
          <children>

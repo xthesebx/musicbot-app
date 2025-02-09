@@ -349,6 +349,10 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onQueue() {
+        if (Double.isNaN(application.queueStage.getX())) {
+            application.queueStage.setX(application.stage.getX() +  application.stage.getWidth());
+            application.queueStage.setY(application.stage.getY() + ((application.stage.getHeight() - 800) / 2));
+        }
         if (application.queueStage.isShowing()) {
             application.queueStage.toFront();
             if (application.queueStage.isIconified())
@@ -368,6 +372,10 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onStreamerStuff() {
+        if (Double.isNaN(application.streamerStage.getX())) {
+            application.streamerStage.setX(application.stage.getX() - 320);
+            application.streamerStage.setY(application.stage.getY() + ((application.stage.getHeight() - 180) / 2));
+        }
         if (application.streamerStage.isShowing()) {
             application.streamerStage.toFront();
             if (application.streamerStage.isIconified())
@@ -467,6 +475,10 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
 
     @FXML
     private void onQuitButtonClick() {
+        int width = 320;
+        int height = 180;
+        application.exitStage.setX(application.stage.getX() + ((application.stage.getWidth() - width) / 2));
+        application.exitStage.setY(application.stage.getY() + ((application.stage.getHeight() - height) / 2));
         application.exitController.open(true);
     }
 

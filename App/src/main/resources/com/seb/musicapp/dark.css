@@ -15,6 +15,10 @@
     -fx-text-fill: #ff0000;
 }
 
+.vBox {
+    -fx-border-color: #474c63;
+}
+
 .slider .track {
     -fx-background-color: #88dbfd;
 }
