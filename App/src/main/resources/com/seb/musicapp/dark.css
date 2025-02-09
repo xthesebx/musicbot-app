@@ -52,7 +52,7 @@
 .table-view .column-header-background, .table-view .column-header-background .filler {
     -fx-background-color: #1b2240;
     -fx-text-fill: #88dbfd;
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-border-color: #474c63;
 }
 
