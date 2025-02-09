@@ -38,8 +38,8 @@
       </HBox>
       <TableView fx:id="queueTable" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="queueTitle" minWidth="150.0" prefWidth="150.0" sortable="false" text="Title" />
-          <TableColumn fx:id="queueArtist" minWidth="90.0" prefWidth="90.0" sortable="false" text="Artist" />
+          <TableColumn fx:id="queueTitle" minWidth="50.0" prefWidth="140.0" sortable="false" text="Title" />
+          <TableColumn fx:id="queueArtist" minWidth="70.0" prefWidth="90.0" sortable="false" text="Artist" />
             <TableColumn fx:id="queueLength" minWidth="80.0" sortable="false" text="Duration" />
         </columns>
          <columnResizePolicy>

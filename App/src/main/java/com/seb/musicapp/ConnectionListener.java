@@ -40,7 +40,13 @@ public class ConnectionListener implements Runnable {
                     application.reset();
                     connector.socket.close();
                     return;
-                } else if (s.equals("idle")) application.discordActivity.setIdlePresence();
+                } else if (s.equals("idle")) {
+                    application.discordActivity.setIdlePresence();
+                    application.stage.setTitle("Music Bot App");
+                }
+                else if (s.equals("playing")) {
+                    application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                }
                 else if (s.startsWith("channel ")) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
                 else try {
                         application.queueController.updateTable(new JSONObject(s));

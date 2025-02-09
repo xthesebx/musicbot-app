@@ -29,6 +29,9 @@ public class QueueController {
      * Liste für die queue
      */
     public List<Song> queue = new ArrayList<>();
+    public List<Song> songList = new ArrayList<>();
+    int i = 0;
+
     @FXML
     TableView<Song> queueTable;
     @FXML
@@ -81,6 +84,7 @@ public class QueueController {
                 JSONArray delete = new JSONArray();
                 queueTable.getSelectionModel().getSelectedItems().forEach(o -> {
                     delete.put(queue.indexOf(o));
+                    songList.remove(o);
                     queue.remove(o);
                 });
                 JSONObject deleteObj = new JSONObject();
@@ -156,7 +160,9 @@ public class QueueController {
                     event.setDropCompleted(true);
                     queueTable.getSelectionModel().select(dropIndex);
                     application.connector.out.println("move " + draggedIndex + " " + dropIndex);
+                    songList.remove(draggedIndex);
                     queue.remove(draggedIndex);
+                    songList.add(dropIndex, draggedPerson);
                     queue.add(dropIndex, draggedPerson);
                     event.consume();
                 }
@@ -173,15 +179,21 @@ public class QueueController {
      */
     public void updateTable(JSONObject data) {
         if (data.has("clear")) {
+            songList.clear();
             queue.clear();
         }
         if (data.has("insert")) {
             JSONObject obj = data.getJSONObject("insert");
             for (String s : obj.keySet()) {
                 JSONObject insObj = obj.getJSONObject(s);
-                if (Integer.parseInt(s) >= 0)
+                if (Integer.parseInt(s) >= 0) {
                     queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
-                else queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                    songList.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                }
+                else {
+                    queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                    songList.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                }
                 insObj.clear();
             }
             obj.clear();
@@ -190,12 +202,17 @@ public class QueueController {
             JSONArray add = data.optJSONArray("queue");
             for (Object o : add) {
                 queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
+                songList.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
             }
             add.clear();
         }
         if (data.has("next")) {
-            if (!queue.isEmpty()) {
-                for (int i = 0; i < data.getInt("next"); i++) {
+            for (int i = 0; i < data.getInt("next"); i++) {
+                if (repeatState == RepeatState.REPEAT_SINGLE) {
+                    break;
+                }
+                this.i++;
+                if (!queue.isEmpty()) {
                     String dur = queue.getFirst().getDuration();
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
@@ -206,13 +223,17 @@ public class QueueController {
                         application.mainWindowController.getTitle().setText(songName);
                     });
                     queue.removeFirst();
+                } else if (repeatState == RepeatState.NO_REPEAT) {
+                    application.discordActivity.setIdlePresence();
+                    Platform.runLater(() -> {
+                        application.mainWindowController.getTitle().setText("Music Bot App");
+                        application.stage.setTitle("Music Bot App");
+                    });
+                } else if (repeatState == RepeatState.REPEAT_QUEUE) {
+                    queue = List.copyOf(songList);
+                    i--;
+                    this.i = 0;
                 }
-            } else {
-                application.discordActivity.setIdlePresence();
-                Platform.runLater(() -> {
-                    application.mainWindowController.getTitle().setText("Music Bot App");
-                    application.stage.setTitle("Music Bot App");
-                });
             }
         }
         queueTable.setItems(FXCollections.observableArrayList(queue));
@@ -233,6 +254,7 @@ public class QueueController {
     }
 
     public void clearQueue() {
+        songList.clear();
         queue.clear();
         application.discordActivity.setIdlePresence();
         Platform.runLater(() -> application.mainWindowController.getTitle().setText("Music Bot App"));
