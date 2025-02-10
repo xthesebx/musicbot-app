@@ -49,8 +49,10 @@ public class ConnectionListener implements Runnable {
                     });
                 }
                 else if (s.equals("playing")) {
-                    Platform.runLater(() -> application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName()));
-                    application.mainWindowController.getTitle().setText(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                    Platform.runLater(() ->  {
+                        application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                        application.mainWindowController.getTitle().setText(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                    });
                 }
                 else if (s.startsWith("channel ")) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
                 else try {
