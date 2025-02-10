@@ -230,7 +230,7 @@ public class QueueController {
                         application.stage.setTitle("Music Bot App");
                     });
                 } else if (repeatState == RepeatState.REPEAT_QUEUE) {
-                    queue = List.copyOf(songList);
+                    queue = new ArrayList<>(songList);
                     i--;
                     this.i = 0;
                 }

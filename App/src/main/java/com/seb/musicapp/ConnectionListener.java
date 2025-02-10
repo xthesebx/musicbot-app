@@ -2,6 +2,7 @@ package com.seb.musicapp;
 
 
 import com.hawolt.logger.Logger;
+import javafx.application.Platform;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,10 +43,14 @@ public class ConnectionListener implements Runnable {
                     return;
                 } else if (s.equals("idle")) {
                     application.discordActivity.setIdlePresence();
-                    application.stage.setTitle("Music Bot App");
+                    Platform.runLater(() -> {
+                        application.stage.setTitle("Music Bot App");
+                        application.mainWindowController.getTitle().setText("Music Bot App");
+                    });
                 }
                 else if (s.equals("playing")) {
-                    application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                    Platform.runLater(() -> application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName()));
+                    application.mainWindowController.getTitle().setText(application.queueController.songList.get(application.queueController.i-1).getSongName());
                 }
                 else if (s.startsWith("channel ")) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
                 else try {
