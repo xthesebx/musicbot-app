@@ -133,7 +133,7 @@ public class DiscordActivity implements Runnable {
             activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
 
         }*/
-        activity.setType(ActivityType.LISTENING);
+        /*activity.setType(ActivityType.LISTENING);
         activity.setDetails(details);
         activity.setState(state);
         activity.setInstance(instance);
@@ -145,7 +145,7 @@ public class DiscordActivity implements Runnable {
             core.activityManager().updateActivity(activity);
         } catch (RuntimeException e) {
             Logger.error(e);
-        }
+        }*/
     }
 
     /**
