@@ -181,6 +181,7 @@ public class QueueController {
         if (data.has("clear")) {
             songList.clear();
             queue.clear();
+            this.i = 0;
         }
         if (data.has("insert")) {
             JSONObject obj = data.getJSONObject("insert");
@@ -256,8 +257,12 @@ public class QueueController {
     public void clearQueue() {
         songList.clear();
         queue.clear();
+        this.i = 0;
         application.discordActivity.setIdlePresence();
-        Platform.runLater(() -> application.mainWindowController.getTitle().setText("Music Bot App"));
+        Platform.runLater(() -> {
+            application.mainWindowController.getTitle().setText("Music Bot App");
+            application.stage.setTitle("Music Bot App");
+        });
         queueTable.setItems(FXCollections.observableArrayList(queue));
         queueTable.refresh();
 
