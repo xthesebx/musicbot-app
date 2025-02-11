@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.github.JnCrMx</groupId>
             <artifactId>discord-game-sdk4j</artifactId>
-            <version>4dc748f486</version>
+            <version>fa5c7e2c16</version>
         </dependency>
         <dependency>
             <groupId>com.github.xthesebx.hawolt-core</groupId>
