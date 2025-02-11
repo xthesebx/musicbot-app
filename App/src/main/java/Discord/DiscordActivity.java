@@ -69,7 +69,7 @@ public class DiscordActivity implements Runnable {
                 params.setFlags(CreateParams.getDefaultFlags());
                 try {
                     this.core = new Core(params);
-                    this.core.setLogHook(LogLevel.ERROR, (logLevel, s) -> Logger.error("[discord-rpc] if rpc is working this can be ignored: {}", s));
+                    this.core.setLogHook(LogLevel.ERROR, (logLevel, s) -> Logger.debug("[discord-rpc] if rpc is working this can be ignored: {}", s));
                     this.setIdlePresence();
                     while (true) {
                         core.runCallbacks();
@@ -123,7 +123,7 @@ public class DiscordActivity implements Runnable {
      */
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
         //TODO: add buttons as soon as they work i guess lol
-        activity.assets().setLargeImage("musicbotlogo");
+        //activity.assets().setLargeImage("musicbotlogo");
         /*if (url != null) {
             if (button != null)
                 activity.removeButton(button);

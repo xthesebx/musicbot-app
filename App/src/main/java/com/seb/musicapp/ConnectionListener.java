@@ -42,7 +42,7 @@ public class ConnectionListener implements Runnable {
                     connector.socket.close();
                     return;
                 } else if (s.equals("idle")) {
-                    application.discordActivity.setIdlePresence();
+                    //application.discordActivity.setIdlePresence();
                     Platform.runLater(() -> {
                         application.stage.setTitle("Music Bot App");
                         application.mainWindowController.getTitle().setText("Music Bot App");
@@ -62,12 +62,8 @@ public class ConnectionListener implements Runnable {
                     }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            if (e instanceof SocketException) {
-                application.reset();
-            }
-            else
-                e.printStackTrace();
+            Logger.debug(e);
+            application.reset();
         }
     }
 }
