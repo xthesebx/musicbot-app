@@ -215,7 +215,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onChangeSkip() {
-        changePlay.setDisable(true);
+        changePlay.setDisable(false);
         changePrev.setDisable(false);
         changeSkip.setDisable(true);
         application.scene.setOnKeyPressed(e -> {
@@ -243,7 +243,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onChangePrev() {
-        changePlay.setDisable(true);
+        changePlay.setDisable(false);
         changeSkip.setDisable(false);
         changePrev.setDisable(true);
         application.scene.setOnKeyPressed(e -> {
