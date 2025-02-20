@@ -37,7 +37,10 @@ public class ConnectController {
         } catch (IOException e) {
             if (e instanceof WrongCodeException) {
                 error.setVisible(true);
+                ID.setText("");
                 error.setTextFill(Paint.valueOf("#ff0000"));
+            } else {
+                Logger.error(e);
             }
         }
     }
