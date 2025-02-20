@@ -55,6 +55,7 @@ public class Connector {
             throw new WrongCodeException("Wrong code");
         }
         new Thread(new ConnectionListener(this, application)).start();
+        new Thread(new KeepAlive(this)).start();
     }
 
     /**
