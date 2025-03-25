@@ -14,10 +14,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -350,8 +352,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onQueue() {
         if (Double.isNaN(application.queueStage.getX())) {
-            application.queueStage.setX(application.stage.getX() +  application.stage.getWidth());
-            application.queueStage.setY(application.stage.getY() + ((application.stage.getHeight() - 800) / 2));
+            setWindowPostions(application.queueStage,
+                    application.stage.getX() + application.stage.getWidth(),
+                    application.stage.getY() + ((application.stage.getHeight() - 800) / 2));
         }
         if (application.queueStage.isShowing()) {
             application.queueStage.toFront();
@@ -373,8 +376,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onStreamerStuff() {
         if (Double.isNaN(application.streamerStage.getX())) {
-            application.streamerStage.setX(application.stage.getX() - 320);
-            application.streamerStage.setY(application.stage.getY() + ((application.stage.getHeight() - 180) / 2));
+            setWindowPostions(application.streamerStage,
+                    application.stage.getX() - 320,
+                    application.stage.getY() + ((application.stage.getHeight() - 180) / 2));
         }
         if (application.streamerStage.isShowing()) {
             application.streamerStage.toFront();
@@ -382,6 +386,15 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 application.streamerStage.setIconified(false);
         }
         else application.streamerStage.show();
+    }
+
+    private void setWindowPostions(Stage stage, double x, double y) {
+        if (x < 0) x = 0;
+        else if (x > Toolkit.getDefaultToolkit().getScreenSize().getWidth()) x = Toolkit.getDefaultToolkit().getScreenSize().getWidth() - application.stage.getWidth();
+        application.queueStage.setX(x);
+        if (y < 0) y = 0;
+        else if (y > Toolkit.getDefaultToolkit().getScreenSize().getHeight()) y = Toolkit.getDefaultToolkit().getScreenSize().getHeight() - application.stage.getHeight();
+        application.streamerStage.setY(y);
     }
     /**
      * <p>onPlay.</p>
