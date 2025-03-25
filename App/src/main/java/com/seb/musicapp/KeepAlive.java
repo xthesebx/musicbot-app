@@ -12,9 +12,9 @@ public class KeepAlive implements Runnable {
         while (true) {
             try {
                 Thread.sleep(600000);
+                connector.out.println("hello");
             } catch (InterruptedException ignored) {
             }
-            connector.out.println("hello");
         }
     }
 }
