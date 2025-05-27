@@ -1,10 +1,12 @@
 package com.seb.musicapp;
 
+import com.hawolt.logger.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.*;
 
 /**
  * <p>Connector class.</p>
@@ -35,7 +37,11 @@ public class Connector {
      */
     public Connector(Main application) {
         this.application = application;
-        ip = "212.132.98.148";
+        try {
+            ip = InetAddress.getByName("sebgameservers.de").getHostAddress();
+        } catch (UnknownHostException e) {
+            Logger.error(e);
+        }
         if (Main.DEBUG) ip = "127.0.0.1";
     }
 
@@ -55,7 +61,7 @@ public class Connector {
             throw new WrongCodeException("Wrong code");
         }
         new Thread(new ConnectionListener(this, application)).start();
-        new Thread(new KeepAlive(this)).start();
+        socket.setKeepAlive(true);
     }
 
     /**
