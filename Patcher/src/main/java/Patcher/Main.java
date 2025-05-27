@@ -14,16 +14,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String version = Reader.read(new File("version.txt"));
-        float f;
-        try {
-            f = Float.parseFloat(version);
-        } catch (NullPointerException e) {
-            f = 0.0f;
-        }
         URL url = new URL("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        int status = con.getResponseCode();
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer content = new StringBuffer();
@@ -32,9 +25,9 @@ public class Main {
         }
         in.close();
         JSONObject obj = new JSONObject(content.toString());
-        float versionNew = Float.parseFloat(obj.getString("name"));
+        String versionNew = obj.getString("name");
         con.disconnect();
-        if (f < versionNew) {
+        if (version.equals(versionNew)) {
             JSONArray assets = obj.getJSONArray("assets");
             AtomicReference<String> downloadlink = new AtomicReference<>("");
             assets.forEach(asset -> {
