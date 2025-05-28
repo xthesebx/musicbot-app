@@ -208,12 +208,6 @@ public class Main extends Application {
     private static void patchPatcher() throws IOException {
 
         String version = Reader.read(new File("version.txt"));
-        float f;
-        try {
-            f = Float.parseFloat(version);
-        } catch (NullPointerException e) {
-            f = 0.0f;
-        }
         URL url = URI.create("https://api.github.com/repos/xthesebx/musicbot-app/releases/latest").toURL();
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -225,9 +219,9 @@ public class Main extends Application {
         }
         in.close();
         JSONObject obj = new JSONObject(content.toString());
-        float versionNew = Float.parseFloat(obj.getString("name"));
+        String versionNew = obj.getString("name");
         con.disconnect();
-        if (f < versionNew) {
+        if (!version.equals(versionNew)) {
             JSONArray assets = obj.getJSONArray("assets");
             AtomicReference<String> downloadlink = new AtomicReference<>("");
             assets.forEach(asset -> {
@@ -244,7 +238,7 @@ public class Main extends Application {
             } catch (IOException e) {
                 Logger.error(e);
             }
-            Writer.write(String.valueOf(versionNew), new File("version.txt"));
+            Writer.write(versionNew, new File("version.txt"));
         }
     }
 

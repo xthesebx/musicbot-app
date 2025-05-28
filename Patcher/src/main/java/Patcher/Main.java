@@ -27,7 +27,7 @@ public class Main {
         JSONObject obj = new JSONObject(content.toString());
         String versionNew = obj.getString("name");
         con.disconnect();
-        if (version.equals(versionNew)) {
+        if (!version.equals(versionNew)) {
             JSONArray assets = obj.getJSONArray("assets");
             AtomicReference<String> downloadlink = new AtomicReference<>("");
             assets.forEach(asset -> {
@@ -45,7 +45,7 @@ public class Main {
                 Logger.error(e);
             }
         }
-        Process p = new ProcessBuilder("jdk-23/bin/java", "-jar", "MusicApp.jar").start();
+        new ProcessBuilder("jdk-23/bin/java", "-jar", "MusicApp.jar").start();
     }
 
 }
