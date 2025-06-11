@@ -1,6 +1,6 @@
 package com.seb.musicapp.window;
 
-import com.seb.musicapp.common.Main;
+import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
 import com.seb.musicapp.common.Song;
 import javafx.application.Platform;

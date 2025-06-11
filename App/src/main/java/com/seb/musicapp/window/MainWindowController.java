@@ -1,7 +1,7 @@
 package com.seb.musicapp.window;
 
 import com.hawolt.logger.Logger;
-import com.seb.musicapp.common.Main;
+import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
 import com.seb.musicapp.common.Theme;
 import com.tulskiy.keymaster.common.HotKey;
@@ -195,7 +195,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         changePlay.setDisable(true);
         changePrev.setDisable(false);
         changeSkip.setDisable(false);
-        application.scene.setOnKeyPressed(e -> {
+        application.mainScene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
                 KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getCode().getCode(), 0);
                 PlayPause.setText(keyStroke.toString().replaceAll("pressed ", ""));
@@ -210,7 +210,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                application.scene.setOnKeyPressed(null);
+                application.mainScene.setOnKeyPressed(null);
                 changePlay.setDisable(false);
             }
         });
@@ -223,11 +223,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         changePlay.setDisable(false);
         changePrev.setDisable(false);
         changeSkip.setDisable(true);
-        application.scene.setOnKeyPressed(e -> {
+        application.mainScene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
                 KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getCode().getCode(), 0);
                 Skip.setText(keyStroke.toString().replaceAll("pressed ", ""));
-                file.put("skip", PlayPause.getText());
+                file.put("skip", Skip.getText());
                 try {
                     PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                     hotkeyWriter.println(file);
@@ -238,7 +238,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                application.scene.setOnKeyPressed(null);
+                application.mainScene.setOnKeyPressed(null);
                 changeSkip.setDisable(false);
             }
         });
@@ -251,7 +251,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         changePlay.setDisable(false);
         changeSkip.setDisable(false);
         changePrev.setDisable(true);
-        application.scene.setOnKeyPressed(e -> {
+        application.mainScene.setOnKeyPressed(e -> {
             if (!MODIFIERS.contains(e.getCode().getCode())) {
                 KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getCode().getCode(), 0);
                 prev.setText(keyStroke.toString().replaceAll("pressed ", ""));
@@ -266,7 +266,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                application.scene.setOnKeyPressed(null);
+                application.mainScene.setOnKeyPressed(null);
                 changePrev.setDisable(false);
             }
         });

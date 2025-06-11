@@ -1,7 +1,7 @@
 package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
-import com.seb.musicapp.common.Main;
+import com.seb.musicapp.Main;
 import com.seb.musicapp.common.WrongCodeException;
 
 import java.io.BufferedReader;

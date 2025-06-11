@@ -1,6 +1,6 @@
 package com.seb.musicapp.window;
 
-import com.seb.musicapp.common.Main;
+import com.seb.musicapp.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

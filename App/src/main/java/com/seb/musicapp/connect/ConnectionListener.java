@@ -2,7 +2,7 @@ package com.seb.musicapp.connect;
 
 
 import com.hawolt.logger.Logger;
-import com.seb.musicapp.common.Main;
+import com.seb.musicapp.Main;
 import javafx.application.Platform;
 import org.json.JSONException;
 import org.json.JSONObject;

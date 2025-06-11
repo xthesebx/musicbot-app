@@ -1,8 +1,7 @@
 package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
-import com.seb.musicapp.common.Main;
-import com.seb.musicapp.window.StreamerController;
+import com.seb.musicapp.Main;
 import com.seb.musicapp.common.WrongCodeException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

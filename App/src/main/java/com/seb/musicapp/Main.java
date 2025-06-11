@@ -1,9 +1,10 @@
-package com.seb.musicapp.common;
+package com.seb.musicapp;
 
 import Discord.DiscordActivity;
 import com.hawolt.logger.Logger;
 import com.seb.io.Reader;
 import com.seb.io.Writer;
+import com.seb.musicapp.common.Theme;
 import com.seb.musicapp.connect.ConnectController;
 import com.seb.musicapp.connect.Connector;
 import com.seb.musicapp.window.ExitController;
@@ -50,7 +51,7 @@ public class Main extends Application {
      */
     public Connector connector;
     public Theme theme;
-    Scene queueScene;
+    public Scene queueScene;
     public Stage stage;
     /**
      * Scene for connector and main window
@@ -73,7 +74,7 @@ public class Main extends Application {
     public Stage exitStage;
     public ExitController exitController;
     private Scene exitScene;
-    private Scene mainScene;
+    public Scene mainScene;
     /**
      * the discord activity
      */
