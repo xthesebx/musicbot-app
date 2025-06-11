@@ -57,7 +57,8 @@ public class ConnectionListener implements Runnable {
                 else if (s.equals("hello")) {
                     continue;
                 }
-                else if (s.startsWith("channel ")) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
+                else if (s.startsWith("channel ")) //application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
+                    ;
                 else try {
                         application.queueController.updateTable(new JSONObject(s));
                     } catch (JSONException e) {

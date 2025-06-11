@@ -221,14 +221,14 @@ public class QueueController {
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
                     String songName = queue.getFirst().getSongName();
-                    application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), seconds, queue.getFirst().getUrl(), true);
+                    //application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), seconds, queue.getFirst().getUrl(), true);
                     Platform.runLater(() -> {
                         application.stage.setTitle(songName);
                         application.mainWindowController.getTitle().setText(songName);
                     });
                     queue.removeFirst();
                 } else if (repeatState == RepeatState.NO_REPEAT) {
-                    application.discordActivity.setIdlePresence();
+                    //application.discordActivity.setIdlePresence();
                     Platform.runLater(() -> {
                         application.mainWindowController.getTitle().setText("Music Bot App");
                         application.stage.setTitle("Music Bot App");
@@ -261,7 +261,7 @@ public class QueueController {
         songList.clear();
         queue.clear();
         this.i = 0;
-        application.discordActivity.setIdlePresence();
+        //application.discordActivity.setIdlePresence();
         Platform.runLater(() -> {
             application.mainWindowController.getTitle().setText("Music Bot App");
             application.stage.setTitle("Music Bot App");
