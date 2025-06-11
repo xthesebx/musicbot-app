@@ -293,4 +293,9 @@ public class QueueController {
     private void onMaximizeButtonClick() {
         application.queueStage.setMaximized(!application.queueStage.isMaximized());
     }
+
+    @FXML
+    public void onPinButtonClick() {
+
+    }
 }
