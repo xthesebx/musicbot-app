@@ -1,4 +1,4 @@
-package com.seb.musicapp;
+package com.seb.musicapp.common;
 
 /**
  * <p>RepeatState class.</p>
@@ -18,5 +18,5 @@ public enum RepeatState {
     /**
      * State to repeat single song
      */
-    REPEAT_SINGLE;
+    REPEAT_SINGLE
 }

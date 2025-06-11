@@ -1,4 +1,4 @@
-package com.seb.musicapp;
+package com.seb.musicapp.common;
 
 import java.io.IOException;
 

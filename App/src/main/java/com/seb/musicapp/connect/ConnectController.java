@@ -1,6 +1,9 @@
-package com.seb.musicapp;
+package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
+import com.seb.musicapp.common.Main;
+import com.seb.musicapp.window.StreamerController;
+import com.seb.musicapp.common.WrongCodeException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -53,7 +56,7 @@ public class ConnectController {
             while (ID == null) {
                 try {
                     Thread.sleep(10);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException ignored) {}
             }
             ID.setOnKeyPressed(e -> {
                 if (e.getCode().equals(KeyCode.ENTER))
@@ -66,7 +69,7 @@ public class ConnectController {
                         }
                     }
             });
-            StreamerController.dragHandler(outerBox);
+            Main.dragHandler(outerBox);
         }).start();
     }
 
@@ -92,7 +95,7 @@ public class ConnectController {
     /**
      * <p>Setter for the field <code>application</code>.</p>
      *
-     * @param application a {@link com.seb.musicapp.Main} object
+     * @param application a {@link Main} object
      */
     public void setApplication(Main application) {
         this.application = application;

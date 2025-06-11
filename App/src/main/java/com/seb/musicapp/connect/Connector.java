@@ -1,6 +1,8 @@
-package com.seb.musicapp;
+package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
+import com.seb.musicapp.common.Main;
+import com.seb.musicapp.common.WrongCodeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class Connector {
     /**
      * <p>Constructor for Connector.</p>
      *
-     * @param application a {@link com.seb.musicapp.Main} object
+     * @param application a {@link Main} object
      */
     public Connector(Main application) {
         this.application = application;

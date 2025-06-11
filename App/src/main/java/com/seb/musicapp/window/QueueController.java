@@ -1,5 +1,8 @@
-package com.seb.musicapp;
+package com.seb.musicapp.window;
 
+import com.seb.musicapp.common.Main;
+import com.seb.musicapp.common.RepeatState;
+import com.seb.musicapp.common.Song;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -30,7 +33,7 @@ public class QueueController {
      */
     public List<Song> queue = new ArrayList<>();
     public List<Song> songList = new ArrayList<>();
-    int i = 0;
+    public int i = 0;
 
     @FXML
     TableView<Song> queueTable;
@@ -57,12 +60,12 @@ public class QueueController {
     /**
      * <p>setApp.</p>
      *
-     * @param application a {@link com.seb.musicapp.Main} object
+     * @param application a {@link Main} object
      */
     public void setApp(Main application) {
         this.application = application;
 
-        StreamerController.dragHandler(outerBox);
+        Main.dragHandler(outerBox);
     }
 
     /**

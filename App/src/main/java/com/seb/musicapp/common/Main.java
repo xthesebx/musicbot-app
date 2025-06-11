@@ -1,11 +1,19 @@
-package com.seb.musicapp;
+package com.seb.musicapp.common;
 
 import Discord.DiscordActivity;
 import com.hawolt.logger.Logger;
 import com.seb.io.Reader;
 import com.seb.io.Writer;
+import com.seb.musicapp.connect.ConnectController;
+import com.seb.musicapp.connect.Connector;
+import com.seb.musicapp.window.ExitController;
+import com.seb.musicapp.window.MainWindowController;
+import com.seb.musicapp.window.QueueController;
+import com.seb.musicapp.window.StreamerController;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +21,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -420,5 +429,28 @@ private void consumeEventIfNotDefaultCursor(final MouseEvent event) {
         private double max(final double value1, final double value2) {
             return Math.max(value1, value2);
         }
+    }
+
+
+    public static void dragHandler(HBox outerBox) {
+        new Thread(() -> {
+            while (outerBox == null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            DoubleProperty x = new SimpleDoubleProperty();
+            DoubleProperty y = new SimpleDoubleProperty();
+            outerBox.setOnMousePressed(e -> {
+                x.set(e.getSceneX());
+                y.set(e.getSceneY());
+            });
+            outerBox.setOnMouseDragged(e -> {
+                outerBox.getScene().getWindow().setX(e.getScreenX() - x.get());
+                outerBox.getScene().getWindow().setY(e.getScreenY() - y.get());
+            });
+        }).start();
     }
 }

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="198.0" prefWidth="283.0" spacing="20.0" styleClass="vBox" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seb.musicapp.ConnectController">
+<VBox alignment="TOP_CENTER" prefHeight="198.0" prefWidth="283.0" spacing="20.0" styleClass="vBox" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seb.musicapp.connect.ConnectController">
    <HBox fx:id="outerBox" alignment="CENTER" prefHeight="30.0" prefWidth="298.0" styleClass="hbox">
       <children>
          <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">

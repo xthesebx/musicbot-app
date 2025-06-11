@@ -1,6 +1,9 @@
-package com.seb.musicapp;
+package com.seb.musicapp.window;
 
 import com.hawolt.logger.Logger;
+import com.seb.musicapp.common.Main;
+import com.seb.musicapp.common.RepeatState;
+import com.seb.musicapp.common.Theme;
 import com.tulskiy.keymaster.common.HotKey;
 import com.tulskiy.keymaster.common.HotKeyListener;
 import com.tulskiy.keymaster.common.MediaKey;
@@ -117,7 +120,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
 
         if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
         else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
-        StreamerController.dragHandler(outerBox);
+        Main.dragHandler(outerBox);
     }
 
     public void setHotkeys() {
@@ -169,7 +172,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     /**
      * <p>Setter for the field <code>application</code>.</p>
      *
-     * @param application a {@link com.seb.musicapp.Main} object
+     * @param application a {@link Main} object
      */
     public void setApplication(Main application) {
         this.application = application;
@@ -391,10 +394,10 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     private void setWindowPostions(Stage stage, double x, double y) {
         if (x < 0) x = 0;
         else if (x > Toolkit.getDefaultToolkit().getScreenSize().getWidth()) x = Toolkit.getDefaultToolkit().getScreenSize().getWidth() - application.stage.getWidth();
-        application.queueStage.setX(x);
+        stage.setX(x);
         if (y < 0) y = 0;
         else if (y > Toolkit.getDefaultToolkit().getScreenSize().getHeight()) y = Toolkit.getDefaultToolkit().getScreenSize().getHeight() - application.stage.getHeight();
-        application.streamerStage.setY(y);
+        stage.setY(y);
     }
     /**
      * <p>onPlay.</p>
@@ -451,7 +454,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     /**
      * <p>setRepeatState.</p>
      *
-     * @param state a {@link com.seb.musicapp.RepeatState} object
+     * @param state a {@link RepeatState} object
      */
     public void setRepeatState (RepeatState state) {
     }

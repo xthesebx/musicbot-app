@@ -1,4 +1,4 @@
-package com.seb.musicapp;
+package com.seb.musicapp.common;
 
 public enum Theme {
     Dark,

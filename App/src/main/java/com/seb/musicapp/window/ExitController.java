@@ -1,7 +1,7 @@
-package com.seb.musicapp;
+package com.seb.musicapp.window;
 
+import com.seb.musicapp.common.Main;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,7 +27,7 @@ public class ExitController {
 
     public void init(Main main) {
         this.main = main;
-        StreamerController.dragHandler(outerBox);
+        Main.dragHandler(outerBox);
     }
 
     public void open(boolean disconnect) {

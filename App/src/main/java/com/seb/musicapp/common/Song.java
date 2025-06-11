@@ -1,4 +1,4 @@
-package com.seb.musicapp;
+package com.seb.musicapp.common;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

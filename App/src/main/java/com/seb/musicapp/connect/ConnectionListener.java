@@ -1,13 +1,13 @@
-package com.seb.musicapp;
+package com.seb.musicapp.connect;
 
 
 import com.hawolt.logger.Logger;
+import com.seb.musicapp.common.Main;
 import javafx.application.Platform;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.SocketException;
 
 /**
  * <p>ConnectionListener class.</p>
@@ -23,8 +23,8 @@ public class ConnectionListener implements Runnable {
     /**
      * <p>Constructor for ConnectionListener.</p>
      *
-     * @param connector a {@link com.seb.musicapp.Connector} object
-     * @param application a {@link com.seb.musicapp.Main} object
+     * @param connector a {@link Connector} object
+     * @param application a {@link Main} object
      */
     public ConnectionListener(Connector connector, Main application) {
         this.connector = connector;
