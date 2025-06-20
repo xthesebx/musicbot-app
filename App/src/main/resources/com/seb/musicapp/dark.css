@@ -42,6 +42,8 @@
 .table-row-cell .table-cell {
     -fx-background-color: inherit;
     -fx-text-fill: inherit;
+    -fx-border-color: #474c63;
+    -fx-border-width: 0.5px;
 }
 
 .label {

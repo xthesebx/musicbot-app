@@ -3,6 +3,7 @@ package com.seb.musicapp.window;
 import com.hawolt.logger.Logger;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
+import com.seb.musicapp.common.Song;
 import com.seb.musicapp.common.Theme;
 import com.tulskiy.keymaster.common.HotKey;
 import com.tulskiy.keymaster.common.HotKeyListener;
@@ -10,9 +11,9 @@ import com.tulskiy.keymaster.common.MediaKey;
 import com.tulskiy.keymaster.common.Provider;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -96,6 +97,16 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     private Button mediaPrev;
     @FXML
     private HBox outerBox;
+    @FXML
+    public TableView<Song> queueTable;
+    @FXML
+    public TableColumn<Song, String> queueTitle;
+    @FXML
+    public TableColumn<Song, String> queueArtist;
+    @FXML
+    public TableColumn<Song, String> queueLength;
+    @FXML
+    private HBox tableHBox;
     private Main application;
     private final Provider provider = Provider.getCurrentProvider(false);
     private final HashMap<String, String> buttons = new HashMap<>();
@@ -354,17 +365,29 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     @FXML
     protected void onQueue() {
-        if (Double.isNaN(application.queueStage.getX())) {
-            setWindowPostions(application.queueStage,
-                    application.stage.getX() + application.stage.getWidth(),
-                    application.stage.getY() + ((application.stage.getHeight() - 800) / 2));
+        if (queue.getText().equals("Unpin Queue")) {
+            queueTable.setVisible(false);
+            tableHBox.getChildren().remove(queueTable);
+            queueWidth = queueTable.getWidth();
+            application.stage.setWidth(application.stage.getWidth() - queueWidth);
+            if (Double.isNaN(application.queueStage.getX())) {
+                setWindowPostions(application.queueStage,
+                        application.stage.getX() + application.stage.getWidth(),
+                        application.stage.getY() + ((application.stage.getHeight() - 800) / 2));
+            }
+            if (application.queueStage.isShowing()) {
+                application.queueStage.toFront();
+                if (application.queueStage.isIconified())
+                    application.queueStage.setIconified(false);
+            } else application.queueStage.show();
+            queue.setText("Pin Queue");
+        } else {
+            application.queueStage.hide();
+            tableHBox.getChildren().add(queueTable);
+            application.stage.setWidth(application.stage.getWidth() + queueWidth);
+            queueTable.setVisible(true);
+            queue.setText("Unpin Queue");
         }
-        if (application.queueStage.isShowing()) {
-            application.queueStage.toFront();
-            if (application.queueStage.isIconified())
-                application.queueStage.setIconified(false);
-        }
-        else application.queueStage.show();
     }
     /**
      * <p>onStop.</p>
@@ -392,10 +415,26 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     }
 
     private void setWindowPostions(Stage stage, double x, double y) {
-        if (x < 0) x = 0;
+        //TODO: fix for multiple screens
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] screens = ge.getScreenDevices();
+
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+
+        for (GraphicsDevice screen : screens) {
+            Rectangle bounds = screen.getDefaultConfiguration().getBounds();
+            if (bounds.x < minX) {
+                minX = bounds.x;
+            }
+            if (bounds.y < minY) {
+                minY = bounds.y;
+            }
+        }
+        if (x < minX) x = minX;
         else if (x > Toolkit.getDefaultToolkit().getScreenSize().getWidth()) x = Toolkit.getDefaultToolkit().getScreenSize().getWidth() - application.stage.getWidth();
         stage.setX(x);
-        if (y < 0) y = 0;
+        if (y < minY) y = minY;
         else if (y > Toolkit.getDefaultToolkit().getScreenSize().getHeight()) y = Toolkit.getDefaultToolkit().getScreenSize().getHeight() - application.stage.getHeight();
         stage.setY(y);
     }

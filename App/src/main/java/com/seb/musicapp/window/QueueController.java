@@ -49,6 +49,10 @@ public class QueueController {
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     private RepeatState repeatState = RepeatState.NO_REPEAT;
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    public List<TableView<Song>> tableViews = new ArrayList<>();
+    List<TableColumn<Song, String>> tableTitles = new ArrayList<>();
+    List<TableColumn<Song, String>> tableArtists = new ArrayList<>();
+    List<TableColumn<Song, String>> tableLenghts = new ArrayList<>();
 
     /**
      * <p>Constructor for QueueController.</p>
@@ -64,7 +68,14 @@ public class QueueController {
      */
     public void setApp(Main application) {
         this.application = application;
-
+        tableViews.add(queueTable);
+        tableViews.add(application.mainWindowController.queueTable);
+        tableTitles.add(queueTitle);
+        tableTitles.add(application.mainWindowController.queueTitle);
+        tableArtists.add(queueArtist);
+        tableArtists.add(application.mainWindowController.queueArtist);
+        tableLenghts.add(queueLength);
+        tableLenghts.add(application.mainWindowController.queueLength);
         Main.dragHandler(outerBox);
     }
 
@@ -72,107 +83,111 @@ public class QueueController {
      * <p>setItems.</p>
      */
     public void setItems() {
-        while (queueTable == null) System.out.println("null");
-        queueTable.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
-        queueTable.setItems(FXCollections.observableArrayList(queue));
-        queueTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
-        queueArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        queueLength.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        queueTable.refresh();
-        queueTable.setItems(FXCollections.observableArrayList(queue));
-        queueTable.refresh();
-        queueTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        queueTable.setOnKeyPressed(e -> {
-            if (e.getCode().getCode() == KeyEvent.VK_DELETE || e.getCode().getCode() == KeyEvent.VK_BACK_SPACE) {
-                JSONArray delete = new JSONArray();
-                queueTable.getSelectionModel().getSelectedItems().forEach(o -> {
-                    delete.put(queue.indexOf(o));
-                    songList.remove(o);
-                    queue.remove(o);
-                });
-                JSONObject deleteObj = new JSONObject();
-                deleteObj.put("delete", delete);
-                application.connector.out.println(deleteObj);
-                queueTable.setItems(FXCollections.observableArrayList(queue));
-                queueTable.refresh();
-            }
-        });
-        queueTable.setRowFactory(tv -> {
-            TableRow<Song> row = new TableRow<>();
-            row.getStylesheets().add(Main.class.getResource("dark.css").toExternalForm());
-
-            row.setOnDragDetected(event -> {
-                if (!row.isEmpty()) {
-                    Integer index = row.getIndex();
-                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
-                    db.setDragView(row.snapshot(null, null));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.put(SERIALIZED_MIME_TYPE, index);
-                    db.setContent(cc);
-                    event.consume();
+        for (int i = 0; i < tableViews.size(); i++) {
+            TableView<Song> tableView = tableViews.get(i);
+            TableColumn<Song, String> tableTitle = tableTitles.get(i);
+            TableColumn<Song, String> tableArtist = tableArtists.get(i);
+            TableColumn<Song, String> tableLength = tableLenghts.get(i);
+            while (tableView == null) System.out.println("null");
+            tableView.setItems(FXCollections.observableArrayList(queue));
+            tableTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
+            tableArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
+            tableLength.setCellValueFactory(new PropertyValueFactory<>("duration"));
+            tableView.refresh();
+            tableView.setItems(FXCollections.observableArrayList(queue));
+            tableView.refresh();
+            tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            tableView.setOnKeyPressed(e -> {
+                if (e.getCode().getCode() == KeyEvent.VK_DELETE || e.getCode().getCode() == KeyEvent.VK_BACK_SPACE) {
+                    JSONArray delete = new JSONArray();
+                    tableView.getSelectionModel().getSelectedItems().forEach(o -> {
+                        delete.put(queue.indexOf(o));
+                        songList.remove(o);
+                        queue.remove(o);
+                    });
+                    JSONObject deleteObj = new JSONObject();
+                    deleteObj.put("delete", delete);
+                    application.connector.out.println(deleteObj);
+                    tableView.setItems(FXCollections.observableArrayList(queue));
+                    tableView.refresh();
                 }
             });
-
-            row.setOnDragOver(event -> {
-
-                final double scrollAreaHeight = 30;
-                final double scrollSpeed = .02;
-
-                Pane header = (Pane)queueTable.lookup("TableHeaderRow");
-                double yTable = queueTable.localToScreen(queueTable.getBoundsInLocal()).getMinY();
-                double yContentStart = yTable + header.getHeight();
-                double yContentEnd = yTable + queueTable.getHeight();
-
-                double y = event.getScreenY();
-                boolean scrollUp = y < yContentStart + scrollAreaHeight;
-                boolean scrollDown = y > yContentEnd - scrollAreaHeight;
-
-                if (scrollUp || scrollDown) {
-                    ScrollBar verticalScrollBar = (ScrollBar)queueTable.lookup(".scroll-bar:vertical");
-                    double offset = scrollUp ? - scrollSpeed : scrollSpeed;
-                    if (verticalScrollBar.getValue() + offset < verticalScrollBar.getMin()) verticalScrollBar.setValue(verticalScrollBar.getMin());
-                    else
-                        verticalScrollBar.setValue(Math.min(verticalScrollBar.getValue() + offset, verticalScrollBar.getMax()));
-                }
-
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            tableView.setRowFactory(tv -> {
+                TableRow<Song> row = new TableRow<>();
+                row.setOnDragDetected(event -> {
+                    if (!row.isEmpty()) {
+                        Integer index = row.getIndex();
+                        Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                        db.setDragView(row.snapshot(null, null));
+                        ClipboardContent cc = new ClipboardContent();
+                        cc.put(SERIALIZED_MIME_TYPE, index);
+                        db.setContent(cc);
                         event.consume();
                     }
-                }
-            });
+                });
 
-            row.setOnDragDropped(event -> {
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                    Song draggedPerson = queueTable.getItems().remove(draggedIndex);
+                row.setOnDragOver(event -> {
 
-                    int dropIndex;
+                    final double scrollAreaHeight = 30;
+                    final double scrollSpeed = .02;
 
-                    if (row.isEmpty()) {
-                        dropIndex = queueTable.getItems().size();
-                    } else {
-                        dropIndex = row.getIndex();
+                    Pane header = (Pane) tableView.lookup("TableHeaderRow");
+                    double yTable = tableView.localToScreen(tableView.getBoundsInLocal()).getMinY();
+                    double yContentStart = yTable + header.getHeight();
+                    double yContentEnd = yTable + tableView.getHeight();
+
+                    double y = event.getScreenY();
+                    boolean scrollUp = y < yContentStart + scrollAreaHeight;
+                    boolean scrollDown = y > yContentEnd - scrollAreaHeight;
+
+                    if (scrollUp || scrollDown) {
+                        ScrollBar verticalScrollBar = (ScrollBar) tableView.lookup(".scroll-bar:vertical");
+                        double offset = scrollUp ? -scrollSpeed : scrollSpeed;
+                        if (verticalScrollBar.getValue() + offset < verticalScrollBar.getMin())
+                            verticalScrollBar.setValue(verticalScrollBar.getMin());
+                        else
+                            verticalScrollBar.setValue(Math.min(verticalScrollBar.getValue() + offset, verticalScrollBar.getMax()));
                     }
 
-                    queueTable.getItems().add(dropIndex, draggedPerson);
+                    Dragboard db = event.getDragboard();
+                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                        if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
+                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                            event.consume();
+                        }
+                    }
+                });
 
-                    event.setDropCompleted(true);
-                    queueTable.getSelectionModel().select(dropIndex);
-                    application.connector.out.println("move " + draggedIndex + " " + dropIndex);
-                    songList.remove(draggedIndex);
-                    queue.remove(draggedIndex);
-                    songList.add(dropIndex, draggedPerson);
-                    queue.add(dropIndex, draggedPerson);
-                    event.consume();
-                }
+                row.setOnDragDropped(event -> {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                        int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                        Song draggedPerson = tableView.getItems().remove(draggedIndex);
+
+                        int dropIndex;
+
+                        if (row.isEmpty()) {
+                            dropIndex = tableView.getItems().size();
+                        } else {
+                            dropIndex = row.getIndex();
+                        }
+
+                        tableView.getItems().add(dropIndex, draggedPerson);
+
+                        event.setDropCompleted(true);
+                        tableView.getSelectionModel().select(dropIndex);
+                        application.connector.out.println("move " + draggedIndex + " " + dropIndex);
+                        songList.remove(draggedIndex);
+                        queue.remove(draggedIndex);
+                        songList.add(dropIndex, draggedPerson);
+                        queue.add(dropIndex, draggedPerson);
+                        event.consume();
+                    }
+                });
+
+                return row;
             });
-
-            return row;
-        });
+        }
     }
 
     /**
@@ -240,7 +255,6 @@ public class QueueController {
                 }
             }
         }
-        queueTable.setItems(FXCollections.observableArrayList(queue));
         if (data.has("repeat")) {
             switch (data.getString("repeat")) {
                 case "NO_REPEAT" -> repeatState = RepeatState.NO_REPEAT;
@@ -253,7 +267,10 @@ public class QueueController {
             int vol = data.getInt("volume");
             Platform.runLater(() -> application.mainWindowController.setVolume(vol));
         }
-        queueTable.refresh();
+        for (TableView<Song> tableView : tableViews) {
+            tableView.setItems(FXCollections.observableArrayList(queue));
+            tableView.refresh();
+        }
         data.clear();
     }
 
@@ -266,8 +283,10 @@ public class QueueController {
             application.mainWindowController.getTitle().setText("Music Bot App");
             application.stage.setTitle("Music Bot App");
         });
-        queueTable.setItems(FXCollections.observableArrayList(queue));
-        queueTable.refresh();
+        for (TableView<Song> tableView : tableViews) {
+            tableView.setItems(FXCollections.observableArrayList(queue));
+            tableView.refresh();
+        }
 
     }
 
@@ -296,6 +315,6 @@ public class QueueController {
 
     @FXML
     public void onPinButtonClick() {
-
+        application.mainWindowController.onQueue();
     }
 }
