@@ -224,7 +224,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                     PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                     hotkeyWriter.println(file);
                     hotkeyWriter.close();
-                    provider.unregister(KeyStroke.getKeyStroke(buttons.get("play")));
+                    boolean media = false;
+                    for (MediaKey mk : MediaKey.values()) {
+                        if (mk.name().equals(buttons.get("play"))) {
+                            media = true;
+                        }
+                    }
+                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("play")));
+                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("play")));
                     buttons.put("play", keyStroke.toString().replaceAll("pressed ", ""));
                     provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
@@ -252,7 +259,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                     PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                     hotkeyWriter.println(file);
                     hotkeyWriter.close();
-                    provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
+                    boolean media = false;
+                    for (MediaKey mk : MediaKey.values()) {
+                        if (mk.name().equals(buttons.get("skip"))) {
+                            media = true;
+                        }
+                    }
+                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("skip")));
+                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
                     buttons.put("skip", keyStroke.toString().replaceAll("pressed ", ""));
                     provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
@@ -280,7 +294,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                     PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
                     hotkeyWriter.println(file);
                     hotkeyWriter.close();
-                    provider.unregister(KeyStroke.getKeyStroke(buttons.get("prev")));
+                    boolean media = false;
+                    for (MediaKey mk : MediaKey.values()) {
+                        if (mk.name().equals(buttons.get("prev"))) {
+                            media = true;
+                        }
+                    }
+                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("prev")));
+                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("prev")));
                     buttons.put("prev", keyStroke.toString().replaceAll("pressed ", ""));
                     provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
