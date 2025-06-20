@@ -4,6 +4,7 @@ import Discord.DiscordActivity;
 import com.hawolt.logger.Logger;
 import com.seb.io.Reader;
 import com.seb.io.Writer;
+import com.seb.musicapp.common.Song;
 import com.seb.musicapp.common.Theme;
 import com.seb.musicapp.connect.ConnectController;
 import com.seb.musicapp.connect.Connector;
@@ -20,6 +21,7 @@ import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -128,7 +130,7 @@ public class Main extends Application {
         exitController = fxmlLoader.getController();
         exitController.init(this);
         fxmlLoader = new FXMLLoader(Main.class.getResource("MainWindow.fxml"));
-        mainScene = new Scene(fxmlLoader.load(),600, 440);
+        mainScene = new Scene(fxmlLoader.load(),1000, 380);
         mainWindowController = fxmlLoader.getController();
         mainWindowController.setApplication(this);
         mainWindowController.init();
@@ -184,8 +186,8 @@ public class Main extends Application {
         connector.connect(id);
         mainWindowController.setHotkeys();
         stage.setTitle("Music Bot App");
-        stage.setWidth(600);
-        stage.setHeight(440);
+        stage.setWidth(mainScene.getWidth());
+        stage.setHeight(mainScene.getHeight());
         stage.setScene(mainScene);
     }
 
@@ -260,6 +262,9 @@ public class Main extends Application {
             streamerscene.getStylesheets().remove(cssDark);
             exitScene.getStylesheets().remove(cssDark);
             mainScene.getStylesheets().remove(cssDark);
+            for (TableView<Song> tableView : queueController.tableViews) {
+                tableView.getStylesheets().remove(cssDark);
+            }
             this.theme = Theme.Light;
         }
         else if (theme.equals("dark")) {
@@ -268,6 +273,9 @@ public class Main extends Application {
             streamerscene.getStylesheets().add(cssDark);
             exitScene.getStylesheets().add(cssDark);
             mainScene.getStylesheets().add(cssDark);
+            for (TableView<Song> tableView : queueController.tableViews) {
+                tableView.getStylesheets().add(cssDark);
+            }
             this.theme = Theme.Dark;
         }
         Writer.write(theme, new File("theme"));

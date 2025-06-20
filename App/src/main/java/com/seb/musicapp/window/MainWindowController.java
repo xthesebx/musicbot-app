@@ -461,6 +461,11 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onRepeat() {
         application.connector.out.println("repeat");
+        switch (repeat.getText()) {
+            case "Currently not repeating" -> repeat.setText("Repeating the Queue");
+            case "Repeating the Queue" -> repeat.setText("Repeating the Song");
+            case "Repeating the Song" -> repeat.setText("Currently not repeating");
+        }
     }
     /**
      * <p>onToggleRequests.</p>
@@ -513,6 +518,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onSliderChange() {
         application.connector.out.println("volume " + Math.round(volume.getValue()));
+        volLabel.setText("Volume: " + Math.round(volume.getValue()) + "%");
+
     }
 
     /** {@inheritDoc} */
@@ -521,9 +528,9 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         Platform.runLater(() -> {
             RepeatState state = (RepeatState) evt.getNewValue();
             switch (state) {
-                case NO_REPEAT -> repeat.setText("No Repeat");
-                case REPEAT_QUEUE -> repeat.setText("Repeats the Queue");
-                case REPEAT_SINGLE -> repeat.setText("Repeats the Song");
+                case NO_REPEAT -> repeat.setText("Currently not repeating");
+                case REPEAT_QUEUE -> repeat.setText("Repeating the Queue");
+                case REPEAT_SINGLE -> repeat.setText("Repeating the Song");
             }
         });
     }
@@ -535,6 +542,7 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
      */
     public void setVolume(int vol) {
         volume.setValue(vol);
+        volLabel.setText("Volume: " + vol + "%");
     }
 
     @FXML
@@ -554,5 +562,20 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     private void onMaximizeButtonClick() {
         application.stage.setMaximized(!application.stage.isMaximized());
+    }
+
+    @FXML
+    private void onPauseBtn() {
+        application.connector.out.println("playpause");
+    }
+
+    @FXML
+    private void onSkipBtn() {
+        application.connector.out.println("nexttrack");
+    }
+
+    @FXML
+    private void onPrevBtn() {
+        application.connector.out.println("prevtrack");
     }
 }
