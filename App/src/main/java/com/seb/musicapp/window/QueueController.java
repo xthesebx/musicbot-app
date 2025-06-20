@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,6 +226,13 @@ public class QueueController {
             }
             add.clear();
         }
+        Instant start = Instant.now();
+        if (data.has("pos")) {
+            JSONObject pos = data.getJSONObject("pos");
+            long timestamp = pos.getLong("timestamp");
+            long position = pos.getLong("position");
+            start = Instant.ofEpochMilli(timestamp - position);
+        }
         if (data.has("next")) {
             for (int i = 0; i < data.getInt("next"); i++) {
                 if (repeatState == RepeatState.REPEAT_SINGLE) {
@@ -236,14 +244,16 @@ public class QueueController {
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
                     String songName = queue.getFirst().getSongName();
-                    //application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), seconds, queue.getFirst().getUrl(), true);
+                    if (application.discordActivity != null)
+                        application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true);
                     Platform.runLater(() -> {
                         application.stage.setTitle(songName);
                         application.mainWindowController.getTitle().setText(songName);
                     });
                     queue.removeFirst();
                 } else if (repeatState == RepeatState.NO_REPEAT) {
-                    //application.discordActivity.setIdlePresence();
+                    if (application.discordActivity != null)
+                        application.discordActivity.setIdlePresence();
                     Platform.runLater(() -> {
                         application.mainWindowController.getTitle().setText("Music Bot App");
                         application.stage.setTitle("Music Bot App");
@@ -278,7 +288,8 @@ public class QueueController {
         songList.clear();
         queue.clear();
         this.i = 0;
-        //application.discordActivity.setIdlePresence();
+        if (application.discordActivity != null)
+            application.discordActivity.setIdlePresence();
         Platform.runLater(() -> {
             application.mainWindowController.getTitle().setText("Music Bot App");
             application.stage.setTitle("Music Bot App");

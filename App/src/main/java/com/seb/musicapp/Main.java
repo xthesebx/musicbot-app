@@ -85,12 +85,12 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         initialise();
-        //DiscordActivity.create().ifPresent(this::setDiscordActivity);
+        DiscordActivity.create().ifPresent(this::setDiscordActivity);
     }
 
-    /*private void setDiscordActivity(DiscordActivity discordActivity) {
+    private void setDiscordActivity(DiscordActivity discordActivity) {
         this.discordActivity = discordActivity;
-    }*/
+    }
 
     /**
      * <p>initialise.</p>

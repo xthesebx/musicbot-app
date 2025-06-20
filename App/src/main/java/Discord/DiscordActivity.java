@@ -108,7 +108,11 @@ public class DiscordActivity implements Runnable {
      * @param instance a boolean
      */
     public void set(String details, String state, int duration, String url, boolean instance) {
-        this.set(details, state, null, Instant.now().plusSeconds(duration), url, instance);
+        this.set(details, state, Instant.now(), Instant.now().plusSeconds(duration), url, instance);
+    }
+
+    public void set(String details, String state, Instant start, int duration, String url, boolean instance) {
+        this.set(details, state, start, start.plusSeconds(duration), url, instance);
     }
 
     /**
@@ -122,6 +126,13 @@ public class DiscordActivity implements Runnable {
      * @param instance a boolean
      */
     public void set(String details, String state, Instant start, Instant end, String url, boolean instance) {
+        while (core == null) {
+          try {
+            Thread.sleep(500);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
+        }
         //TODO: add buttons as soon as they work i guess lol
         //activity.assets().setLargeImage("musicbotlogo");
         /*if (url != null) {
@@ -133,19 +144,20 @@ public class DiscordActivity implements Runnable {
             activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
 
         }*/
-        /*activity.setType(ActivityType.LISTENING);
+        activity.setType(ActivityType.LISTENING);
         activity.setDetails(details);
         activity.setState(state);
         activity.setInstance(instance);
-        if (start != null && end == null) activity.timestamps().setStart(start);
-        if (end != null && start == null) {
+        if (start != null) activity.timestamps().setStart(start);
+        else activity.timestamps().clearStart();
+        if (end != null) {
             activity.timestamps().setEnd(end);
-        }
+        } else activity.timestamps().clearEnd();
         try {
             core.activityManager().updateActivity(activity);
         } catch (RuntimeException e) {
             Logger.error(e);
-        }*/
+        }
     }
 
     /**

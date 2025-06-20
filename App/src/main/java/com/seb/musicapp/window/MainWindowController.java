@@ -107,6 +107,15 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     public TableColumn<Song, String> queueLength;
     @FXML
     private HBox tableHBox;
+    @FXML
+    Label volLabel;
+    @FXML
+    Button pausebtn;
+    @FXML
+    Button prevbtn;
+    @FXML
+    Button skipbtn;
+    double queueWidth;
     private Main application;
     private final Provider provider = Provider.getCurrentProvider(false);
     private final HashMap<String, String> buttons = new HashMap<>();
