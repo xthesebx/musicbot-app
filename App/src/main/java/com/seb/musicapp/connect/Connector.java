@@ -1,13 +1,11 @@
 package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
+import com.seb.io.Writer;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.WrongCodeException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
 
 /**
@@ -60,10 +58,11 @@ public class Connector {
         out.println(id.strip());
         String s = in.readLine();
         if (s.equals("no")) {
-            throw new WrongCodeException("Wrong code");
+            throw new WrongCodeException("Wrong code, maybe the code got reset?");
         }
         new Thread(new ConnectionListener(this, application)).start();
         socket.setKeepAlive(true);
+        Writer.write(id, new File("code.txt"));
     }
 
     /**

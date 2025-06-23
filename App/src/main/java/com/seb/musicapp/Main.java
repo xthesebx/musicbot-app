@@ -158,10 +158,14 @@ public class Main extends Application {
         streamerStage.setTitle("Streamer Stuff");
         String theme = Reader.read(new File("theme"));
         setTheme(theme);
+        connectController.setApplication(this);
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(_ -> System.exit(0));
-        connectController.setApplication(this);
+        File code = new File("code.txt");
+        if (code.exists() && !Reader.read(code).isEmpty()) {
+            connect(Reader.read(code));
+        }
     }
 
     /**
