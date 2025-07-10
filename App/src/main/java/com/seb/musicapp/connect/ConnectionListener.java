@@ -37,6 +37,7 @@ public class ConnectionListener implements Runnable {
         String s;
         try {
             while ((s = connector.in.readLine()) != null) {
+                final String message = s;
                 if (s.equals("close")) {
                     application.reset();
                     connector.socket.close();
@@ -57,7 +58,7 @@ public class ConnectionListener implements Runnable {
                 else if (s.equals("hello")) {
                     continue;
                 }
-                else if (s.startsWith("channel ") && application.discordActivity != null) application.discordActivity.addJoin(s.substring(s.indexOf(" ") + 1));
+                else if (s.startsWith("channel ")) application.discordActivity.ifPresent(discord -> discord.addJoin(message.substring(message.indexOf(" ") + 1)));
                 else try {
                         application.queueController.updateTable(new JSONObject(s));
                     } catch (JSONException e) {

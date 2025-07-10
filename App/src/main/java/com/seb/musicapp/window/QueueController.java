@@ -1,5 +1,6 @@
 package com.seb.musicapp.window;
 
+import Discord.DiscordActivity;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
 import com.seb.musicapp.common.Song;
@@ -226,13 +227,14 @@ public class QueueController {
             }
             add.clear();
         }
-        Instant start = Instant.now();
+        Instant starttemp = Instant.now();
         if (data.has("pos")) {
             JSONObject pos = data.getJSONObject("pos");
             long timestamp = pos.getLong("timestamp");
             long position = pos.getLong("position");
-            start = Instant.ofEpochMilli(timestamp - position);
+            starttemp = Instant.ofEpochMilli(timestamp - position);
         }
+        final Instant start = starttemp;
         if (data.has("next")) {
             for (int i = 0; i < data.getInt("next"); i++) {
                 if (repeatState == RepeatState.REPEAT_SINGLE) {
@@ -244,16 +246,14 @@ public class QueueController {
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
                     String songName = queue.getFirst().getSongName();
-                    if (application.discordActivity != null)
-                        application.discordActivity.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true);
+                    application.discordActivity.ifPresent(discord -> discord.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true));
                     Platform.runLater(() -> {
                         application.stage.setTitle(songName);
                         application.mainWindowController.getTitle().setText(songName);
                     });
                     queue.removeFirst();
                 } else if (repeatState == RepeatState.NO_REPEAT) {
-                    if (application.discordActivity != null)
-                        application.discordActivity.setIdlePresence();
+                    application.discordActivity.ifPresent(DiscordActivity::setIdlePresence);
                     Platform.runLater(() -> {
                         application.mainWindowController.getTitle().setText("Music Bot App");
                         application.stage.setTitle("Music Bot App");
@@ -288,8 +288,7 @@ public class QueueController {
         songList.clear();
         queue.clear();
         this.i = 0;
-        if (application.discordActivity != null)
-            application.discordActivity.setIdlePresence();
+        application.discordActivity.ifPresent(DiscordActivity::setIdlePresence);
         Platform.runLater(() -> {
             application.mainWindowController.getTitle().setText("Music Bot App");
             application.stage.setTitle("Music Bot App");

@@ -35,6 +35,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -80,18 +81,18 @@ public class Main extends Application {
     /**
      * the discord activity
      */
-    public DiscordActivity discordActivity;
+    public Optional<DiscordActivity> discordActivity;
 
     /** {@inheritDoc} */
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         initialise();
-        DiscordActivity.create().ifPresent(this::setDiscordActivity);
+        setDiscordActivity();
     }
 
-    private void setDiscordActivity(DiscordActivity discordActivity) {
-        this.discordActivity = discordActivity;
+    private void setDiscordActivity() {
+        this.discordActivity = DiscordActivity.create();
     }
 
     /**
