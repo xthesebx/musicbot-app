@@ -6,6 +6,7 @@ import com.seb.io.Reader;
 import com.seb.io.Writer;
 import com.seb.musicapp.common.Song;
 import com.seb.musicapp.common.Theme;
+import com.seb.musicapp.common.WrongCodeException;
 import com.seb.musicapp.connect.ConnectController;
 import com.seb.musicapp.connect.Connector;
 import com.seb.musicapp.window.ExitController;
@@ -165,7 +166,11 @@ public class Main extends Application {
         stage.setOnCloseRequest(_ -> System.exit(0));
         File code = new File("code.txt");
         if (code.exists() && !Reader.read(code).isEmpty()) {
-            connect(Reader.read(code));
+            try {
+                connect(Reader.read(code));
+            } catch (WrongCodeException e) {
+
+            }
         }
     }
 
