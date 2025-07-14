@@ -39,11 +39,13 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
+            <!---
             <Button fx:id="disconnect" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDisconnect" text="Disconnect" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Button>
+            -->
             <Button fx:id="exit" mnemonicParsing="false" onAction="#onExit" text="Exit">
                <HBox.margin>
                   <Insets left="10.0" />

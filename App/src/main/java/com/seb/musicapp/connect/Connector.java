@@ -1,9 +1,11 @@
 package com.seb.musicapp.connect;
 
 import com.hawolt.logger.Logger;
+import com.seb.io.Reader;
 import com.seb.io.Writer;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.WrongCodeException;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.*;
@@ -18,6 +20,7 @@ public class Connector {
     /**
      * Socket connection to the bot
      */
+    public static JSONObject code = Reader.readJSON(new File("code.json"));
     public Socket socket;
     /**
      * printwriter for the socket
@@ -59,10 +62,13 @@ public class Connector {
         String s = in.readLine();
         if (s.equals("no")) {
             throw new WrongCodeException("Wrong code, maybe the code got reset?");
+        } else {
+            code.put(s, id);
+            Writer.write(code.toString(), new File("code.json"));
+            application.mainWindowController.setComboBox(s, id);
         }
         new Thread(new ConnectionListener(this, application)).start();
         socket.setKeepAlive(true);
-        Writer.write(id, new File("code.txt"));
     }
 
     /**
