@@ -1,5 +1,7 @@
 package com.seb.musicapp.common;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -11,6 +13,7 @@ import javafx.beans.property.StringProperty;
  */
 public class Song {
     private StringProperty songName, artist, duration, url;
+    private IntegerProperty durationInt;
 
     /**
      * <p>Getter for the field <code>songName</code>.</p>
@@ -19,6 +22,10 @@ public class Song {
      */
     public String getSongName() {
         return songName.get();
+    }
+
+    public int getDurationInt() {
+        return durationInt.get();
     }
 
     /**
@@ -30,6 +37,10 @@ public class Song {
         return songName;
     }
 
+    public IntegerProperty durationIntProperty() {
+        return durationInt;
+    }
+
     /**
      * <p>Setter for the field <code>songName</code>.</p>
      *
@@ -37,6 +48,10 @@ public class Song {
      */
     public void setSongName(String songName) {
         this.songName.set(songName);
+    }
+
+    public void setDurationInt(int duration) {
+        this.durationInt.set(duration);
     }
 
     /**
@@ -128,10 +143,11 @@ public class Song {
      * @param duration a {@link java.lang.String} object
      * @param url a {@link java.lang.String} object
      */
-    public Song(String songName, String artist, String duration, String url) {
+    public Song(String songName, String artist, String duration, String url, int durationInt) {
         this.songName = new SimpleStringProperty(this, "title", songName);
         this.artist = new SimpleStringProperty(this, "artist", artist);
         this.duration = new SimpleStringProperty(this, "duration", duration);
         this.url = new SimpleStringProperty(this, "url", url);
+        this.durationInt = new SimpleIntegerProperty(this, "durationInt", durationInt);
     }
 }

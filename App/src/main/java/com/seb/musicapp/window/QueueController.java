@@ -1,6 +1,8 @@
 package com.seb.musicapp.window;
 
 import Discord.DiscordActivity;
+import com.hawolt.logger.Logger;
+import com.seb.musicapp.MPRIS.Metadata;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
 import com.seb.musicapp.common.Song;
@@ -12,15 +14,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import org.freedesktop.dbus.DBusPath;
+import org.freedesktop.dbus.exceptions.DBusException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mpris.TrackListImpl;
+import org.mpris.mpris.PlaybackStatus;
 
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.seb.musicapp.connect.ConnectionListener.j;
 
 
 /**
@@ -208,12 +220,12 @@ public class QueueController {
             for (String s : obj.keySet()) {
                 JSONObject insObj = obj.getJSONObject(s);
                 if (Integer.parseInt(s) >= 0) {
-                    queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
-                    songList.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                    queue.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url"), stringToIntDuration(insObj.getString("duration"))));
+                    songList.add(Integer.parseInt(s), new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url"), stringToIntDuration(insObj.getString("duration"))));
                 }
                 else {
-                    queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
-                    songList.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url")));
+                    queue.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url"), stringToIntDuration(insObj.getString("duration"))));
+                    songList.add(new Song(insObj.getString("title"), insObj.getString("author"), insObj.getString("duration"), insObj.getString("url"), stringToIntDuration(insObj.getString("duration"))));
                 }
                 insObj.clear();
             }
@@ -222,16 +234,17 @@ public class QueueController {
         if (data.has("queue")) {
             JSONArray add = data.optJSONArray("queue");
             for (Object o : add) {
-                queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
-                songList.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url")));
+                queue.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url"), stringToIntDuration(((JSONObject) o).getString("duration"))));
+                songList.add(new Song(((JSONObject) o).getString("title"), ((JSONObject) o).getString("author"), ((JSONObject) o).getString("duration"), ((JSONObject) o).getString("url"), stringToIntDuration(((JSONObject) o).getString("duration"))));
             }
             add.clear();
         }
         Instant starttemp = Instant.now();
+        long position = 0;
         if (data.has("pos")) {
             JSONObject pos = data.getJSONObject("pos");
             long timestamp = pos.getLong("timestamp");
-            long position = pos.getLong("position");
+            position = pos.getLong("position");
             starttemp = Instant.ofEpochMilli(timestamp - position);
         }
         final Instant start = starttemp;
@@ -246,7 +259,40 @@ public class QueueController {
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
                     String songName = queue.getFirst().getSongName();
-                    application.discordActivity.ifPresent(discord -> discord.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true));
+                    if (data.has("paused")) {
+                        if (data.getBoolean("paused")) application.discordActivity.ifPresent(DiscordActivity::setIdlePresence);
+                        else {
+                            application.discordActivity.ifPresent(discord -> discord.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true));
+                            Platform.runLater(() ->  {
+                                application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                                application.mainWindowController.getTitle().setText(application.queueController.songList.get(application.queueController.i-1).getSongName());
+
+                            });
+                            if (application.mainWindowController.hotkeyController instanceof WaylandController) {
+                                try {
+                                    DBusPath path = new DBusPath("/" + j);
+                                    WaylandController.trackList.setTracks(List.of(path));
+                                    WaylandController.mpris.setMetadata(new Metadata.Builder()
+                                            .setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName())
+                                            .setArtists(List.of(application.queueController.songList.get(application.queueController.i-1).getArtist()))
+                                            .setURL(new URI(application.queueController.songList.get(application.queueController.i-1).getUrl()))
+                                            .setLength(application.queueController.songList.get(application.queueController.i-1).getDurationInt())
+                                            .setTrackID(path)
+                                            .build()
+
+                                    );
+                                    WaylandController.mpris.setPosition((int) position * 1000);
+                                    j++;
+                                    WaylandController.mpris.setPlaybackStatus(PlaybackStatus.PLAYING);
+                                } catch (DBusException e) {
+                                    throw new RuntimeException(e);
+                                } catch (URISyntaxException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    } else application.discordActivity.ifPresent(discord -> discord.set(queue.getFirst().getSongName(), queue.getFirst().getArtist(), start, seconds, queue.getFirst().getUrl(), true));
+
                     Platform.runLater(() -> {
                         application.stage.setTitle(songName);
                         application.mainWindowController.getTitle().setText(songName);
@@ -326,5 +372,13 @@ public class QueueController {
     @FXML
     public void onPinButtonClick() {
         application.mainWindowController.onQueue();
+    }
+
+    private int stringToIntDuration (String duration) {
+        int temp;
+        temp = 60 * Integer.parseInt(duration.substring(0, duration.indexOf(":")));
+        temp += Integer.parseInt(duration.substring(duration.indexOf(":") + 1));
+        temp *= 1000 * 1000;
+        return temp;
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.freedesktop.dbus.exceptions.DBusException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +44,7 @@ import java.util.List;
  * @author xXTheSebXx
  * @version 1.0-SNAPSHOT
  */
-public class MainWindowController implements HotKeyListener, PropertyChangeListener {
+public class MainWindowController implements PropertyChangeListener {
 
     public Label getTitle() {
         return title;
@@ -117,15 +118,15 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     Button skipbtn;
     double queueWidth;
     private Main application;
-    private final Provider provider = Provider.getCurrentProvider(false);
-    private final HashMap<String, String> buttons = new HashMap<>();
+    public static final HashMap<String, String> buttons = new HashMap<>();
     private static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
     private JSONObject file;
+    public final HotkeyController hotkeyController = System.getenv("XDG_SESSION_TYPE").equals("wayland") ? new WaylandController() : new OtherController();
 
     /**
      * <p>Constructor for MainWindowController.</p>
      */
-    public MainWindowController() {
+    public MainWindowController() throws DBusException {
     }
 
     /**
@@ -158,34 +159,16 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
             if (!(e instanceof NoSuchFileException))
                 Logger.error(e);
         }
-        if (!play.equals("MEDIA_PLAY_PAUSE") && !play.isEmpty()){
-            provider.register(KeyStroke.getKeyStroke(play), this);
-            buttons.put("play", play);
-        }
-        else if (!play.isEmpty()) {
-            provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
-            buttons.put("play", play);
-        }
+
+        hotkeyController.setHotkeys(play, skip, prevString);
+
+        buttons.put("play", play);
         PlayPause.setText(play);
 
-        if (!skip.equals("MEDIA_NEXT_TRACK") && !skip.isEmpty()) {
-            provider.register(KeyStroke.getKeyStroke(skip), this);
-            buttons.put("skip", skip);
-        }
-        else if (!skip.isEmpty()) {
-            provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
-            buttons.put("skip", skip);
-        }
+        buttons.put("skip", skip);
         Skip.setText(skip);
 
-        if (!prevString.equals("MEDIA_PREV_TRACK") && !prevString.isEmpty()) {
-            provider.register(KeyStroke.getKeyStroke(prevString), this);
-            buttons.put("prev", prevString);
-        }
-        else if (!prevString.isEmpty()) {
-            provider.register(MediaKey.MEDIA_PREV_TRACK, this);
-            buttons.put("prev", prevString);
-        }
+        buttons.put("prev", prevString);
         prev.setText(prevString);
     }
 
@@ -198,13 +181,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         this.application = application;
     }
 
-    /**
-     * <p>Getter for the field <code>provider</code>.</p>
-     *
-     * @return a {@link com.tulskiy.keymaster.common.Provider} object
-     */
-    public Provider getProvider() {
-        return provider;
+    public void reset() {
+        if (hotkeyController instanceof OtherController) ((OtherController) hotkeyController).getProvider().reset();
     }
 
     /**
@@ -230,10 +208,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                             media = true;
                         }
                     }
-                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("play")));
-                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("play")));
+                    hotkeyController.onChangePlay(media, keyStroke);
                     buttons.put("play", keyStroke.toString().replaceAll("pressed ", ""));
-                    provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -265,10 +241,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                             media = true;
                         }
                     }
-                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("skip")));
-                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("skip")));
+                    hotkeyController.onChangeSkip(media, keyStroke);
                     buttons.put("skip", keyStroke.toString().replaceAll("pressed ", ""));
-                    provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -300,10 +274,8 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
                             media = true;
                         }
                     }
-                    if (media) provider.unregister(MediaKey.valueOf(buttons.get("prev")));
-                    else provider.unregister(KeyStroke.getKeyStroke(buttons.get("prev")));
+                    hotkeyController.onChangePrev(media, keyStroke);
                     buttons.put("prev", keyStroke.toString().replaceAll("pressed ", ""));
-                    provider.register(keyStroke, this);
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -318,15 +290,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onMediaPlay() {
         if (PlayPause.getText().equals("MEDIA_PLAY_PAUSE")) return;
-        provider.unregister(KeyStroke.getKeyStroke(PlayPause.getText()));
         PlayPause.setText("MEDIA_PLAY_PAUSE");
         file.put("play", PlayPause.getText());
         try {
             PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
             hotkeyWriter.println(file);
             hotkeyWriter.close();
+            hotkeyController.onMediaPlay(PlayPause);
             buttons.put("play", "MEDIA_PLAY_PAUSE");
-            provider.register(MediaKey.MEDIA_PLAY_PAUSE, this);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         }
@@ -337,15 +308,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onMediaSkip() {
         if (Skip.getText().equals("MEDIA_NEXT_TRACK")) return;
-        provider.unregister(KeyStroke.getKeyStroke(Skip.getText()));
         Skip.setText("MEDIA_NEXT_TRACK");
         file.put("skip", Skip.getText());
         try {
             PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
             hotkeyWriter.println(file);
             hotkeyWriter.close();
+            hotkeyController.onMediaSkip(Skip);
             buttons.put("skip", "MEDIA_NEXT_TRACK");
-            provider.register(MediaKey.MEDIA_NEXT_TRACK, this);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         }
@@ -356,15 +326,14 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
     @FXML
     protected void onMediaPrev() {
         if (prev.getText().equals("MEDIA_PREV_TRACK")) return;
-        provider.unregister(KeyStroke.getKeyStroke(prev.getText()));
         prev.setText("MEDIA_PREV_TRACK");
         file.put("prev", prev.getText());
         try {
             PrintWriter hotkeyWriter = new PrintWriter("hotkeys");
             hotkeyWriter.println(file);
             hotkeyWriter.close();
+            hotkeyController.onMediaPrev(prev);
             buttons.put("prev", "MEDIA_PREV_TRACK");
-            provider.register(MediaKey.MEDIA_PREV_TRACK, this);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         }
@@ -503,27 +472,6 @@ public class MainWindowController implements HotKeyListener, PropertyChangeListe
         });
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onHotKey(HotKey hotKey) {
-        if (hotKey.keyStroke != null) {
-            if (buttons.get("play").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
-                application.connector.out.println("playpause");
-            } else if (buttons.get("skip").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
-                application.connector.out.println("nexttrack");
-            } else if (buttons.get("prev").equals(hotKey.keyStroke.toString().replaceAll("pressed ", ""))) {
-                application.connector.out.println("prevtrack");
-            }
-        } else if (hotKey.mediaKey != null) {
-            if (buttons.get("play").equals(hotKey.mediaKey.toString())) {
-                application.connector.out.println("playpause");
-            } else if (buttons.get("skip").equals(hotKey.mediaKey.toString())) {
-                application.connector.out.println("nexttrack");
-            } else if (buttons.get("prev").equals(hotKey.mediaKey.toString())) {
-                application.connector.out.println("prevtrack");
-            }
-        }
-    }
 
     /**
      * <p>setRepeatState.</p>

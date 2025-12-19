@@ -49,9 +49,10 @@ public class Main extends Application {
     String cssDark = Main.class.getResource("dark.css").toExternalForm();
 
     /** Constant <code>DEBUG=false</code> */
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     /**
      * Connector object for connection to
+     *
      */
     public Connector connector;
     public Theme theme;
@@ -79,6 +80,7 @@ public class Main extends Application {
     public ExitController exitController;
     private Scene exitScene;
     public Scene mainScene;
+    public static Main application;
     /**
      * the discord activity
      */
@@ -87,6 +89,7 @@ public class Main extends Application {
     /** {@inheritDoc} */
     @Override
     public void start(Stage stage) throws IOException {
+        application = this;
         this.stage = stage;
         initialise();
         setDiscordActivity();
@@ -205,7 +208,7 @@ public class Main extends Application {
      * <p>reset.</p>
      */
     public void reset() {
-        mainWindowController.getProvider().reset();
+        mainWindowController.reset();
         //discordActivity.setIdlePresence();
         Platform.runLater(() -> {
             try {
