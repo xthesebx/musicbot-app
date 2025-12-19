@@ -24,6 +24,7 @@
             </Label>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
+                  <ComboBox fx:id="serverBox" onAction="#comboAction" prefWidth="150.0" />
                   <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onMinimizeButtonClick" styleClass="headerButton" text="_" />
                   <Button mnemonicParsing="false" onAction="#onMaximizeButtonClick" styleClass="headerButton" text="🗖" />
                   <Button mnemonicParsing="false" onAction="#onQuitButtonClick" styleClass="headerButton" text="X" />

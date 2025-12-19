@@ -1,10 +1,14 @@
 package com.seb.musicapp.window;
 
 import com.hawolt.logger.Logger;
+import com.seb.io.Reader;
+import com.seb.io.Writer;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
+import com.seb.musicapp.common.Server;
 import com.seb.musicapp.common.Song;
 import com.seb.musicapp.common.Theme;
+import com.seb.musicapp.connect.Connector;
 import com.tulskiy.keymaster.common.HotKey;
 import com.tulskiy.keymaster.common.HotKeyListener;
 import com.tulskiy.keymaster.common.MediaKey;
@@ -28,6 +32,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -116,6 +121,8 @@ public class MainWindowController implements PropertyChangeListener {
     Button prevbtn;
     @FXML
     Button skipbtn;
+    @FXML
+    ComboBox<Server> serverBox;
     double queueWidth;
     private Main application;
     public static final HashMap<String, String> buttons = new HashMap<>();
@@ -142,6 +149,12 @@ public class MainWindowController implements PropertyChangeListener {
         if (application.theme == Theme.Dark) Platform.runLater(() -> modeChange.setText("Light Mode"));
         else if (application.theme == Theme.Light) Platform.runLater(() -> modeChange.setText("Dark Mode"));
         Main.dragHandler(outerBox);
+        Connector.code.keySet().forEach((key) -> {
+            serverBox.getItems().add(new Server(key, Connector.code.getString(key)));
+        });
+
+        serverBox.setValue(serverBox.getItems().stream().filter(server -> server.getServerName().equals(Reader.read(new File("code.txt")))).findFirst().orElse(null));
+        serverBox.getItems().add(new Server("+", null));
     }
 
     public void setHotkeys() {
@@ -546,5 +559,25 @@ public class MainWindowController implements PropertyChangeListener {
     @FXML
     private void onPrevBtn() {
         application.connector.out.println("prevtrack");
+    }
+
+    @FXML
+    private void comboAction() throws IOException {
+        if (serverBox.getValue().getServerName().equals("+")) {
+            application.reset();
+            return;
+        }
+        Writer.write(serverBox.getValue().getServerName(), new File("code.txt"));
+        application.connector.connect(serverBox.getValue().getUUID());
+    }
+
+    public void setComboBox(String servername, String id) {
+        serverBox.getItems().stream().filter(s -> s.getServerName().equals(servername)).findFirst().ifPresentOrElse(s -> {
+            serverBox.setValue(s);
+        }, () -> {
+            Server s = new Server(servername, id);
+            serverBox.getItems().add(serverBox.getItems().size() - 1, s);
+            serverBox.setValue(s);
+        });
     }
 }
