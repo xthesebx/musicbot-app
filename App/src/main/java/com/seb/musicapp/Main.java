@@ -49,7 +49,7 @@ public class Main extends Application {
     String cssDark = Main.class.getResource("dark.css").toExternalForm();
 
     /** Constant <code>DEBUG=false</code> */
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     /**
      * Connector object for connection to
      *
