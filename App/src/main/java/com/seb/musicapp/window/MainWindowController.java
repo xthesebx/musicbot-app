@@ -121,12 +121,15 @@ public class MainWindowController implements PropertyChangeListener {
     public static final HashMap<String, String> buttons = new HashMap<>();
     private static final List<Integer> MODIFIERS = Arrays.asList(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT, KeyEvent.VK_META);
     private JSONObject file;
-    public final HotkeyController hotkeyController = System.getenv("XDG_SESSION_TYPE").equals("wayland") ? new WaylandController() : new OtherController();
+    public final HotkeyController hotkeyController;
 
     /**
      * <p>Constructor for MainWindowController.</p>
      */
     public MainWindowController() throws DBusException {
+        if (System.getenv("XDG_SESSION_TYPE") != null) {
+            hotkeyController = System.getenv("XDG_SESSION_TYPE").equals("wayland") ? new WaylandController() : new OtherController();
+        } else hotkeyController = new OtherController();
     }
 
     /**
