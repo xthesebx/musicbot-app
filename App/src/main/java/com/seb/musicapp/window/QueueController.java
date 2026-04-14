@@ -6,6 +6,7 @@ import com.seb.musicapp.MPRIS.Metadata;
 import com.seb.musicapp.Main;
 import com.seb.musicapp.common.RepeatState;
 import com.seb.musicapp.common.Song;
+import com.seb.musicapp.connect.ConnectionListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -255,6 +256,7 @@ public class QueueController {
                 }
                 this.i++;
                 if (!queue.isEmpty()) {
+                    ConnectionListener.currentSong = queue.getFirst();
                     String dur = queue.getFirst().getDuration();
                     int minutes = Integer.parseInt(dur.substring(0, dur.indexOf(":")));
                     int seconds = Integer.parseInt(dur.substring(dur.indexOf(":") + 1)) + (minutes * 60);
