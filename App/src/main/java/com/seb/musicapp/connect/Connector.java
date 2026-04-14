@@ -65,6 +65,7 @@ public class Connector {
         } else {
             code.put(s, id);
             Writer.write(code.toString(), new File("code.json"));
+            Writer.write(s, new File("code.txt"));
             application.mainWindowController.setComboBox(s, id);
         }
         new Thread(new ConnectionListener(this, application)).start();
