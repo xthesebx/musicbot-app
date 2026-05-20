@@ -115,14 +115,6 @@ public class Main extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(queueScene);
         stage.setTitle("Connect");
-        InputStream iconStream = Main.class.getResourceAsStream("icon.jpg");
-        if (iconStream != null) {
-            Image icon = new Image(iconStream);
-            stage.getIcons().add(icon);
-            queueStage.getIcons().add(icon);
-            streamerStage.getIcons().add(icon);
-            exitStage.getIcons().add(icon);
-        }
         queueController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
         streamerscene = new Scene(fxmlLoader.load(), 320, 180);
@@ -176,6 +168,15 @@ public class Main extends Application {
                 Logger.error(Reader.read(code));
 
             }
+        }
+
+        InputStream iconStream = Main.class.getResourceAsStream("icon.png");
+        if (iconStream != null) {
+            Image icon = new Image(iconStream);
+            stage.getIcons().add(icon);
+            queueStage.getIcons().add(icon);
+            streamerStage.getIcons().add(icon);
+            exitStage.getIcons().add(icon);
         }
     }
 
