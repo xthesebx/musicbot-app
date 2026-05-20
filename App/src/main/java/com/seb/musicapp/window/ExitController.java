@@ -31,9 +31,9 @@ public class ExitController {
     }
 
     public void open(boolean disconnect) {
-        this.disconnect.setVisible(disconnect);
-        this.disconnect.setMaxWidth(0);
-        this.disconnect.setMaxHeight(0);
+        //this.disconnect.setVisible(disconnect);
+        //this.disconnect.setMaxWidth(0);
+        //this.disconnect.setMaxHeight(0);
         main.exitStage.show();
     }
 

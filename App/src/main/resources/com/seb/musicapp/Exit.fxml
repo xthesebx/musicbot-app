@@ -17,7 +17,7 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
                <image>
-                  <Image url="@icon.jpg" />
+                  <Image url="@icon.png" />
                </image>
             </ImageView>
             <Label alignment="CENTER" contentDisplay="CENTER" text="Exit?">
@@ -39,11 +39,13 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
+            <!---
             <Button fx:id="disconnect" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDisconnect" text="Disconnect" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Button>
+            -->
             <Button fx:id="exit" mnemonicParsing="false" onAction="#onExit" text="Exit">
                <HBox.margin>
                   <Insets left="10.0" />

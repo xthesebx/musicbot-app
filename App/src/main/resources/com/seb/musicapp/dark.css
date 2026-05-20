@@ -31,7 +31,7 @@
 .table-column {
     -fx-background-color: #1b2240;
     -fx-text-fill: #88dbfd;
-    -fx-border-width: none;
+    -fx-border-width: 0;
 }
 
 .scroll-bar .decrement-button, .scroll-bar .increment-button, .scroll-bar .thumb {
@@ -49,6 +49,18 @@
 .label {
     -fx-background-color: #1b2240;
     -fx-text-fill: #88dbfd;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+}
+
+.combo-box-base {
+    -fx-background-color: #1b2240;
+    -fx-text-fill: #88dbfd;
+    -fx-border-color: #474c63;
+    -fx-border-style: hidden hidden hidden solid;
 }
 
 .table-view .column-header-background, .table-view .column-header-background .filler {

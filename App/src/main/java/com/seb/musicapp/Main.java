@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -52,7 +53,6 @@ public class Main extends Application {
     public static boolean DEBUG = false;
     /**
      * Connector object for connection to
-     *
      */
     public Connector connector;
     public Theme theme;
@@ -80,6 +80,7 @@ public class Main extends Application {
     public ExitController exitController;
     private Scene exitScene;
     public Scene mainScene;
+    public Stage connectStage;
     public static Main application;
     /**
      * the discord activity
@@ -114,14 +115,6 @@ public class Main extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(queueScene);
         stage.setTitle("Connect");
-        InputStream iconStream = Main.class.getResourceAsStream("icon.jpg");
-        if (iconStream != null) {
-            Image icon = new Image(iconStream);
-            stage.getIcons().add(icon);
-            queueStage.getIcons().add(icon);
-            streamerStage.getIcons().add(icon);
-            exitStage.getIcons().add(icon);
-        }
         queueController = fxmlLoader.getController();
         fxmlLoader = new FXMLLoader(Main.class.getResource("Streamer.fxml"));
         streamerscene = new Scene(fxmlLoader.load(), 320, 180);
@@ -168,12 +161,22 @@ public class Main extends Application {
         stage.show();
         stage.setOnCloseRequest(_ -> System.exit(0));
         File code = new File("code.txt");
-        if (code.exists() && !Reader.read(code).isEmpty()) {
+        if (code.exists() && Reader.read(code) != null && !Reader.read(code).isEmpty()) {
             try {
-                connect(Reader.read(code));
-            } catch (WrongCodeException e) {
+                connect(Connector.code.getString(Reader.read(code)));
+            } catch (WrongCodeException | JSONException e) {
+                Logger.error(Reader.read(code));
 
             }
+        }
+
+        InputStream iconStream = Main.class.getResourceAsStream("icon.png");
+        if (iconStream != null) {
+            Image icon = new Image(iconStream);
+            stage.getIcons().add(icon);
+            queueStage.getIcons().add(icon);
+            streamerStage.getIcons().add(icon);
+            exitStage.getIcons().add(icon);
         }
     }
 
@@ -202,6 +205,9 @@ public class Main extends Application {
         stage.setWidth(mainScene.getWidth());
         stage.setHeight(mainScene.getHeight());
         stage.setScene(mainScene);
+        if (connectStage != null && connectStage.isShowing()) {
+            connectStage.close();
+        }
     }
 
     /**
@@ -209,24 +215,23 @@ public class Main extends Application {
      */
     public void reset() {
         mainWindowController.reset();
-        //discordActivity.setIdlePresence();
+        discordActivity.ifPresent(DiscordActivity::setIdlePresence);
         Platform.runLater(() -> {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
-                scene.setRoot(fxmlLoader.load());
-                stage.setTitle("Connect");
-                stage.setScene(scene);
-                stage.setWidth(400);
-                stage.setHeight(300);
-                stage.show();
-                connectController = fxmlLoader.getController();
-                connectController.setApplication(this);
-                queueStage.close();
-                streamerStage.close();
-                queueController.clearQueue();
-            } catch (IOException e) {
-                Logger.error(e);
-            }
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Connect.fxml"));
+          try {
+            scene.setRoot(fxmlLoader.load());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+          connectStage = new Stage();
+            connectStage.initStyle(StageStyle.UNDECORATED);
+            connectStage.setTitle("Connect");
+            connectStage.setScene(scene);
+            connectStage.setWidth(400);
+            connectStage.setHeight(300);
+            connectStage.show();
+            connectController = fxmlLoader.getController();
+            connectController.setApplication(this);
         });
     }
 

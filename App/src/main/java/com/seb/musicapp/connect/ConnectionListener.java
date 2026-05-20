@@ -5,6 +5,7 @@ import Discord.DiscordActivity;
 import com.hawolt.logger.Logger;
 import com.seb.musicapp.MPRIS.Metadata;
 import com.seb.musicapp.Main;
+import com.seb.musicapp.common.Song;
 import com.seb.musicapp.window.WaylandController;
 import javafx.application.Platform;
 import org.freedesktop.dbus.DBusPath;
@@ -16,6 +17,7 @@ import org.mpris.mpris.PlaybackStatus;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ public class ConnectionListener implements Runnable {
     private final Main application;
     private int i;
     public static int j = 0;
+    public static Song currentSong;
 
     /**
      * <p>Constructor for ConnectionListener.</p>
@@ -79,10 +82,71 @@ public class ConnectionListener implements Runnable {
                         }
                     }
                 }
-                else if (s.equals("playing")) {
+                else if (s.startsWith("resumed")) {
+                    if (currentSong == null) return;
+
                     Platform.runLater(() ->  {
-                        application.stage.setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName());
-                        application.mainWindowController.getTitle().setText(application.queueController.songList.get(application.queueController.i-1).getSongName());
+                        application.stage.setTitle(currentSong.getSongName());
+                        application.mainWindowController.getTitle().setText(currentSong.getSongName());
+                    });
+                    if (application.mainWindowController.hotkeyController instanceof WaylandController) {
+                        try {
+                            DBusPath path = new DBusPath("/" + j);
+                            WaylandController.trackList.setTracks(List.of(path));
+                            WaylandController.mpris.setMetadata(new Metadata.Builder()
+                                    .setTitle(currentSong.getSongName())
+                                    .setArtists(List.of(currentSong.getArtist()))
+                                    .setURL(new URI(currentSong.getUrl()))
+                                    .setLength(currentSong.getDurationInt())
+                                    .setTrackID(path)
+                                    .build()
+
+                            );
+                            int pos = Integer.parseInt(s.substring(s.indexOf(" ") + 1));
+                            WaylandController.mpris.setPosition(pos*1000);
+                            j++;
+                            WaylandController.mpris.setPlaybackStatus(PlaybackStatus.PLAYING);
+
+                            application.discordActivity.ifPresent(discord -> discord.set(currentSong.getSongName(), currentSong.getArtist(), Instant.ofEpochMilli(System.currentTimeMillis()-pos), (currentSong.getDurationInt() / 1000) / 1000, currentSong.getUrl(), true));
+                        } catch (DBusException e) {
+                            throw new RuntimeException(e);
+                        } catch (URISyntaxException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                else if (s.equals("again")) {
+                    if (currentSong == null) return;
+                    if (application.mainWindowController.hotkeyController instanceof WaylandController) {
+                        try {
+                            DBusPath path = new DBusPath("/" + j);
+                            WaylandController.trackList.setTracks(List.of(path));
+                            WaylandController.mpris.setMetadata(new Metadata.Builder()
+                                    .setTitle(currentSong.getSongName())
+                                    .setArtists(List.of(currentSong.getArtist()))
+                                    .setURL(new URI(currentSong.getUrl()))
+                                    .setLength(currentSong.getDurationInt())
+                                    .setTrackID(path)
+                                    .build()
+
+                            );
+                            WaylandController.mpris.setPosition(0);
+                            j++;
+                            WaylandController.mpris.setPlaybackStatus(PlaybackStatus.PLAYING);
+
+                            application.discordActivity.ifPresent(discord -> discord.set(currentSong.getSongName(), currentSong.getArtist(), Instant.ofEpochMilli(System.currentTimeMillis()), (currentSong.getDurationInt() / 1000) / 1000, currentSong.getUrl(), true));
+                        } catch (DBusException e) {
+                            throw new RuntimeException(e);
+                        } catch (URISyntaxException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                else if (s.equals("playing")) {
+                    currentSong = application.queueController.songList.get(application.queueController.i-1);
+                    Platform.runLater(() ->  {
+                        application.stage.setTitle(currentSong.getSongName());
+                        application.mainWindowController.getTitle().setText(currentSong.getSongName());
 
                     });
                     if (application.mainWindowController.hotkeyController instanceof WaylandController) {
@@ -90,10 +154,10 @@ public class ConnectionListener implements Runnable {
                             DBusPath path = new DBusPath("/" + j);
                             WaylandController.trackList.setTracks(List.of(path));
                             WaylandController.mpris.setMetadata(new Metadata.Builder()
-                                    .setTitle(application.queueController.songList.get(application.queueController.i-1).getSongName())
-                                    .setArtists(List.of(application.queueController.songList.get(application.queueController.i-1).getArtist()))
-                                    .setURL(new URI(application.queueController.songList.get(application.queueController.i-1).getUrl()))
-                                    .setLength(application.queueController.songList.get(application.queueController.i-1).getDurationInt())
+                                    .setTitle(currentSong.getSongName())
+                                    .setArtists(List.of(currentSong.getArtist()))
+                                    .setURL(new URI(currentSong.getUrl()))
+                                    .setLength(currentSong.getDurationInt())
                                     .setTrackID(path)
                                     .build()
 

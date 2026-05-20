@@ -74,6 +74,10 @@ public class ConnectController {
 
     @FXML
     private void onQuitButtonClick() {
+        if (application.connectStage != null) {
+            application.connectStage.close();
+            return;
+        }
         int width = 320;
         int height = 180;
         application.exitStage.setX(application.stage.getX() + ((application.stage.getWidth() - width) / 2));

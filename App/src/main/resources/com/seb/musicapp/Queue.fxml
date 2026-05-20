@@ -19,7 +19,7 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
                <image>
-                  <Image url="@icon.jpg" />
+                  <Image url="@icon.png" />
                </image>
             </ImageView>
             <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" text="Queue">
